@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joc de l'Impostor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        /* Botó gran que ocupa tota la pantalla */
+        .full-screen-btn {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Pantalla de Configuració -->
+    <div id="setup-screen" class="w-full max-w-md space-y-8 bg-slate-800 p-8 rounded-3xl shadow-2xl border border-slate-700">
+        <div class="text-center">
+            <h1 class="text-4xl font-black tracking-tighter mb-2 italic text-red-500 uppercase">IMPOSTOR</h1>
+            <p class="text-slate-400">Configura la teva partida</p>
+        </div>
+
+        <div class="space-y-8">
+            <!-- Control Jugadors -->
+            <div>
+                <label class="block text-center text-sm font-bold mb-4 text-slate-400 uppercase tracking-widest">Número de jugadors</label>
+                <div class="flex items-center justify-between bg-slate-900 rounded-2xl p-2 border border-slate-700">
+                    <button onclick="adjustValue('total-players', -1)" class="w-16 h-16 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-3xl font-bold transition active:scale-90">-</button>
+                    <span id="display-total-players" class="text-4xl font-black w-20 text-center">4</span>
+                    <button onclick="adjustValue('total-players', 1)" class="w-16 h-16 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-3xl font-bold transition active:scale-90">+</button>
+                </div>
+            </div>
+
+            <!-- Control Impostors -->
+            <div>
+                <label class="block text-center text-sm font-bold mb-4 text-slate-400 uppercase tracking-widest">Número d'impostors</label>
+                <div class="flex items-center justify-between bg-slate-900 rounded-2xl p-2 border border-slate-700">
+                    <button onclick="adjustValue('total-impostors', -1)" class="w-16 h-16 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-3xl font-bold transition active:scale-90">-</button>
+                    <span id="display-total-impostors" class="text-4xl font-black w-20 text-center">1</span>
+                    <button onclick="adjustValue('total-impostors', 1)" class="w-16 h-16 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-3xl font-bold transition active:scale-90">+</button>
+                </div>
+                
+                <!-- Toggle Aleatori -->
+                <div class="mt-4 flex items-center justify-center space-x-3">
+                    <label class="flex items-center cursor-pointer group">
+                        <div class="relative">
+                            <input type="checkbox" id="random-mode" class="sr-only peer">
+                            <div class="w-12 h-6 bg-slate-700 rounded-full peer peer-checked:bg-red-600 transition-colors"></div>
+                            <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-6"></div>
+                        </div>
+                        <span class="ml-3 text-slate-300 font-medium group-hover:text-white transition-colors uppercase text-xs tracking-wider">Mode aleatori</span>
+                    </label>
+                </div>
+                <p class="text-[10px] text-center text-slate-500 mt-2 italic px-4">Si s'activa, hi haurà entre 1 i el número indicat d'impostors.</p>
+            </div>
+
+            <button onclick="startGame()" class="w-full py-6 bg-red-600 hover:bg-red-500 rounded-2xl font-black text-2xl shadow-lg transition transform active:scale-95 uppercase tracking-tighter">
+                REPARTIR ROLS
+            </button>
+        </div>
+    </div>
+
+    <!-- Pantalla de Transició (Botó gran per al següent jugador) -->
+    <div id="transition-screen" class="hidden full-screen-btn gradient-bg">
+        <div class="text-center p-6 w-full h-full flex flex-col justify-center items-center">
+            <h2 id="player-turn-text" class="text-4xl font-black mb-2 uppercase italic text-red-500">Jugador 1</h2>
+            <p class="text-slate-400 mb-12">Passa el dispositiu i clica el botó</p>
+            
+            <div class="w-64 h-64 bg-slate-800 border-4 border-slate-700 rounded-full flex items-center justify-center shadow-[0_0_60px_rgba(0,0,0,0.5)] active:bg-slate-700 transition-colors cursor-pointer" onclick="revealRole()">
+                <span class="text-white font-black text-xl text-center px-8 uppercase leading-tight">CLICA PER VEURE EL TEU ROL</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Revelació -->
+    <div id="reveal-screen" class="hidden flex flex-col items-center justify-between h-screen w-full py-12 px-6 text-center">
+        <div class="flex-1 flex flex-col items-center justify-center">
+            <div id="role-display" class="space-y-4">
+                <!-- Contingut dinàmic -->
+            </div>
+        </div>
+
+        <button onclick="nextTurn()" class="w-full max-w-xs py-6 bg-slate-700 hover:bg-slate-600 rounded-2xl font-black text-xl shadow-xl transition transform active:scale-95 uppercase">
+            OCULTAR I CONTINUAR
+        </button>
+    </div>
+
+    <!-- Pantalla Final -->
+    <div id="end-screen" class="hidden text-center space-y-8 bg-slate-800 p-8 rounded-3xl shadow-2xl border border-slate-700 w-full max-w-md">
+        <h2 class="text-3xl font-black text-green-500 uppercase italic">ROLS ASSIGNATS</h2>
+        <p class="text-slate-300">Tothom ja sap qui és. Comenceu la discussió!</p>
+        <div class="p-6 bg-slate-900 rounded-2xl border border-slate-700">
+            <p class="text-xs text-slate-500 uppercase font-black mb-2 tracking-widest">Resum de la partida</p>
+            <p id="game-summary" class="text-xl font-bold"></p>
+            <p id="game-mode-info" class="text-xs text-slate-500 mt-2"></p>
+        </div>
+        <button onclick="resetGame()" class="w-full py-5 bg-slate-700 hover:bg-slate-600 rounded-2xl font-black transition uppercase">
+            NOVA PARTIDA
+        </button>
+    </div>
+
+    <script>
+        // Diccionari de paraules estructurat per categories
+        const wordCategories = {
+            "Oficis": ["Advocat", "Arquitecte", "Astronauta", "Barber", "Bomber", "Cambrer", "Carnisser", "Científic", "Cuiner", "Dentista", "Escriptor", "Electricista", "Enfermer", "Fuster", "Fotògraf", "Informàtic", "Jutge", "Mecànic", "Metge", "Músic", "Pintor", "Pilot", "Policia", "Professor", "Psicòleg", "Veterinari", "Venedor", "Pagès", "Actor", "Ballarí"],
+            "Llar": ["Cadira", "Taula", "Sofà", "Llit", "Armari", "Mirall", "Llampa", "Catifa", "Cortina", "Rellotge", "Nevera", "Forn", "Microones", "Rentadora", "Rentaplats", "Televisor", "Ordinador", "Telèfon", "Ràdio", "Clau", "Martell", "Tornavís", "Alicates", "Escala", "Recollidor", "Escombra", "Pala", "Ventilador", "Paraigua", "Maleta"],
+            "Roba": ["Samarreta", "Pantalons", "Jaqueta", "Abric", "Faldilla", "Vestit", "Jersei", "Mitjons", "Sabates", "Botes", "Sandàlies", "Gorra", "Barret", "Bufanda", "Guants", "Cinturó", "Corbata", "Pijama", "Barnús", "Roba interior", "Ulleres", "Rellotge de polsera", "Bossa", "Motxilla", "Moneder", "Collaret", "Anell", "Arracades", "Polsera"],
+            "Animals": ["Gos", "Gat", "Cavall", "Vaca", "Porc", "Ovella", "Cabra", "Gallina", "Gall", "Ànec", "Elefant", "Lleó", "Tigre", "Girafa", "Zebra", "Mico", "Os", "Llop", "Guineu", "Conill", "Ratolí", "Serp", "Cocodril", "Tortuga", "Rana", "Peix", "Tauró", "Dofí", "Balena", "Pingüí", "Àguila", "Mussol", "Lloro", "Abella", "Papallona", "Aranya"],
+            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
+            "Transport": ["Cotxe", "Autobús", "Tren", "Metro", "Tramvia", "Bicicleta", "Moto", "Avió", "Helicòpter", "Vaixell", "Submarí", "Coet", "Tractor", "Camió", "Taxi", "Ambulància", "Grúa", "Caravana", "Veler", "Canoa"],
+            "Llocs": ["Escola", "Universitat", "Hospital", "Església", "Museu", "Teatre", "Cine", "Biblioteca", "Restaurant", "Hotel", "Supermercat", "Mercat", "Parc", "Platja", "Muntanya", "Bosc", "Riu", "Llac", "Mar", "Illa", "Desert", "Castell", "Pont", "Aeroport", "Estació", "Gimnàs", "Piscina", "Estadi", "Banc", "Oficina", "Selva"],
+            "Espai i Clima": ["Sol", "Lluna", "Estrella", "Planeta", "Terra", "Mart", "Núvol", "Pluja", "Neu", "Vent", "Tempesta", "Llampec", "Arc de Sant Martí", "Foc", "Aigua", "Aire", "Gel"],
+            "Esports": ["Futbol", "Bàsquet", "Tennis", "Natació", "Ciclisme", "Escacs", "Boxa", "Karate", "Esquí", "Golf"],
+            "Instruments": ["Guitarra", "Piano", "Violí", "Trompeta", "Tambor", "Flauta", "Saxofon", "Arpa", "Clarinet", "Acordió"],
+            "Anatomia": ["Cap", "Braç", "Cama", "Cor", "Estómac", "Pulmó", "Orella", "Nas", "Ull", "Mà"],
+            "Cuina": ["Cullera", "Forquilla", "Ganivet", "Paella", "Olla", "Cassola", "Espàtula", "Ratllador", "Batedora", "Colador"],
+            "Tecnologia": ["Tablet", "Monitor", "Teclat", "Ratolí", "Impressora", "Càmera", "Altaveu", "Auriculars", "Dron", "Consola"],
+            "Esdeveniments": ["Casament", "Aniversari", "Concert", "Festa", "Carnaval", "Festival", "Bateig", "Sopar", "Viatge", "Excursió"],
+            "Geometria": ["Cercle", "Quadrat", "Triangle", "Rectangle", "Cub", "Esfera", "Cilindre", "Piràmide", "Rombe", "Oval"],
+            "Construccions": ["Gratacels", "Cabana", "Far", "Monestir", "Molí", "Granja", "Garatge", "Hangar", "Búnquer", "Fàbrica"],
+            "Materials": ["Fusta", "Metall", "Vidre", "Plàstic", "Paper", "Cartró", "Pedra", "Or", "Plata", "Coure"],
+            "Bany": ["Sabó", "Tovallola", "Raspall", "Esponja", "Xampú", "Pinta", "Dutxa", "Banyera", "Secador", "Vàter"]
+        };
+
+        // Còpia de treball per poder eliminar paraules a mesura que surten
+        let workingCategories = JSON.parse(JSON.stringify(wordCategories));
+        // Llista de claus de categories que encara no s'han fet servir en el cicle actual
+        let unusedCategoryKeys = [];
+
+        let gameConfig = {
+            players: 4,
+            impostors: 1,
+            isRandom: false
+        };
+
+        let gameData = {
+            currentPlayer: 0,
+            roles: [],
+            secretWord: "",
+            actualImpostors: 0
+        };
+
+        function adjustValue(id, delta) {
+            if (id === 'total-players') {
+                gameConfig.players = Math.max(3, Math.min(20, gameConfig.players + delta));
+                document.getElementById('display-total-players').innerText = gameConfig.players;
+                
+                const maxImpostors = Math.max(1, gameConfig.players - 2);
+                if (gameConfig.impostors > maxImpostors) {
+                    gameConfig.impostors = maxImpostors;
+                    document.getElementById('display-total-impostors').innerText = gameConfig.impostors;
+                }
+            } else if (id === 'total-impostors') {
+                const maxImpostors = Math.max(1, gameConfig.players - 2);
+                gameConfig.impostors = Math.max(1, Math.min(maxImpostors, gameConfig.impostors + delta));
+                document.getElementById('display-total-impostors').innerText = gameConfig.impostors;
+            }
+        }
+
+        /**
+         * Lògica per obtenir una paraula secreta:
+         * 1. No repeteix categoria fins que s'han usat totes les que tenen paraules.
+         * 2. No repeteix paraula individual fins que s'esgoten totes les del diccionari.
+         */
+        function getSecretWord() {
+            // Identificar quines categories tenen paraules disponibles
+            let categoriesWithWords = Object.keys(workingCategories).filter(cat => workingCategories[cat].length > 0);
+            
+            // Si no queden paraules en absolut, reiniciem tot el diccionari
+            if (categoriesWithWords.length === 0) {
+                workingCategories = JSON.parse(JSON.stringify(wordCategories));
+                categoriesWithWords = Object.keys(workingCategories);
+                unusedCategoryKeys = [];
+            }
+
+            // Filtrar les claus del cicle actual per assegurar que només triem categories que encara tenen paraules
+            let validUnusedKeys = unusedCategoryKeys.filter(cat => workingCategories[cat].length > 0);
+
+            // Si hem completat un cicle (o n'estem començant un de nou), reiniciem el cicle de categories
+            if (validUnusedKeys.length === 0) {
+                unusedCategoryKeys = [...categoriesWithWords];
+                validUnusedKeys = [...unusedCategoryKeys];
+            }
+
+            // Triar una categoria aleatòria de les que toquen en aquest cicle
+            const catIndex = Math.floor(Math.random() * validUnusedKeys.length);
+            const chosenCategory = validUnusedKeys[catIndex];
+
+            // Triar una paraula aleatòria d'aquesta categoria
+            const wordsList = workingCategories[chosenCategory];
+            const wordIndex = Math.floor(Math.random() * wordsList.length);
+            const chosenWord = wordsList[wordIndex];
+
+            // Eliminar la paraula de la llista de treball (no repetir paraula)
+            wordsList.splice(wordIndex, 1);
+            
+            // Eliminar la categoria del cicle actual (no repetir categoria fins acabar el cicle)
+            unusedCategoryKeys = unusedCategoryKeys.filter(k => k !== chosenCategory);
+
+            return chosenWord;
+        }
+
+        function startGame() {
+            gameConfig.isRandom = document.getElementById('random-mode').checked;
+            
+            if (gameConfig.isRandom) {
+                gameData.actualImpostors = Math.floor(Math.random() * gameConfig.impostors) + 1;
+            } else {
+                gameData.actualImpostors = gameConfig.impostors;
+            }
+
+            gameData.secretWord = getSecretWord();
+            gameData.currentPlayer = 0;
+            
+            gameData.roles = new Array(gameConfig.players).fill(gameData.secretWord);
+            
+            let assignedImpostors = 0;
+            while (assignedImpostors < gameData.actualImpostors) {
+                let randomIndex = Math.floor(Math.random() * gameConfig.players);
+                if (gameData.roles[randomIndex] !== "IMPOSTOR") {
+                    gameData.roles[randomIndex] = "IMPOSTOR";
+                    assignedImpostors++;
+                }
+            }
+
+            document.getElementById('setup-screen').classList.add('hidden');
+            showTransition();
+        }
+
+        function showTransition() {
+            if (gameData.currentPlayer < gameConfig.players) {
+                document.getElementById('player-turn-text').innerText = `Jugador ${gameData.currentPlayer + 1}`;
+                document.getElementById('transition-screen').classList.remove('hidden');
+                document.getElementById('reveal-screen').classList.add('hidden');
+            } else {
+                showEndScreen();
+            }
+        }
+
+        function revealRole() {
+            const role = gameData.roles[gameData.currentPlayer];
+            const display = document.getElementById('role-display');
+            
+            document.getElementById('transition-screen').classList.add('hidden');
+            document.getElementById('reveal-screen').classList.remove('hidden');
+
+            if (role === "IMPOSTOR") {
+                display.innerHTML = `
+                    <h3 class="text-slate-500 font-bold uppercase text-xs tracking-widest mb-2">Atenció:</h3>
+                    <h1 class="text-5xl font-black text-white mb-4 uppercase tracking-tighter italic">ETS L'IMPOSTOR</h1>
+                `;
+            } else {
+                display.innerHTML = `
+                    <h3 class="text-slate-500 font-bold uppercase text-xs tracking-widest mb-2">La paraula secreta és:</h3>
+                    <h1 class="text-6xl font-black text-white mb-4 uppercase tracking-tight">${role}</h1>
+                `;
+            }
+        }
+
+        function nextTurn() {
+            gameData.currentPlayer++;
+            showTransition();
+        }
+
+        function showEndScreen() {
+            document.getElementById('reveal-screen').classList.add('hidden');
+            document.getElementById('transition-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('hidden');
+            
+            if (gameConfig.isRandom) {
+                document.getElementById('game-summary').innerText = `${gameConfig.players} Jugadors`;
+                document.getElementById('game-mode-info').innerText = "(Mode aleatori: número d'impostors secret)";
+            } else {
+                document.getElementById('game-summary').innerText = 
+                    `${gameConfig.players} Jugadors | ${gameData.actualImpostors} Impostor${gameData.actualImpostors > 1 ? 's' : ''}`;
+                document.getElementById('game-mode-info').innerText = "(Mode fix)";
+            }
+        }
+
+        function resetGame() {
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
