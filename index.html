@@ -82,7 +82,7 @@
         <!-- Part Superior: Marca i Inici -->
         <div class="w-full flex flex-col items-center space-y-5">
             <div class="relative min-h-[200px] flex items-center justify-center">
-                <!-- Imatge d'animació principal (augmentada un 25%) -->
+                <!-- Imatge d'animació principal -->
                 <img id="main-logo" 
                      src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp" 
                      alt="IMPOSTOR" 
@@ -189,7 +189,7 @@
             "Llar": ["Cadira", "Taula", "Sofà", "Llit", "Armari", "Mirall", "Llampa", "Catifa", "Cortina", "Rellotge", "Nevera", "Forn", "Microones", "Rentadora", "Rentaplats", "Televisor", "Ordinador", "Telèfon", "Ràdio", "Clau", "Martell", "Tornavís", "Alicates", "Escala", "Recollidor", "Escombra", "Pala", "Ventilador", "Paraigua", "Maleta"],
             "Roba": ["Samarreta", "Pantalons", "Jaqueta", "Abric", "Faldilla", "Vestit", "Jersei", "Mitjons", "Sabates", "Botes", "Sandàlies", "Gorra", "Barret", "Bufanda", "Guants", "Cinturó", "Corbata", "Pijama", "Barnús", "Roba interior", "Ulleres", "Rellotge de polsera", "Bossa", "Motxilla", "Moneder", "Collaret", "Anell", "Arracades", "Polsera"],
             "Animals": ["Gos", "Gat", "Cavall", "Vaca", "Porc", "Ovella", "Cabra", "Gallina", "Gall", "Ànec", "Elefant", "Lleó", "Tigre", "Girafa", "Zebra", "Mico", "Os", "Llop", "Guineu", "Conill", "Ratolí", "Serp", "Cocodril", "Tortuga", "Rana", "Peix", "Tauró", "Dofí", "Balena", "Pingüí", "Àguila", "Mussol", "Lloro", "Abella", "Papallona", "Aranya"],
-            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
+            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
             "Transport": ["Cotxe", "Autobús", "Tren", "Metro", "Tramvia", "Bicicleta", "Moto", "Avió", "Helicòpter", "Vaixell", "Submarí", "Coet", "Tractor", "Camió", "Taxi", "Ambulància", "Grúa", "Caravana", "Veler", "Canoa"],
             "Llocs": ["Escola", "Universitat", "Hospital", "Església", "Museu", "Teatre", "Cine", "Biblioteca", "Restaurant", "Hotel", "Supermercat", "Mercat", "Parc", "Platja", "Muntanya", "Bosc", "Riu", "Llac", "Mar", "Illa", "Desert", "Castell", "Pont", "Aeroport", "Estació", "Gimnàs", "Piscina", "Estadi", "Banc", "Oficina", "Selva"],
             "Espai i Clima": ["Sol", "Lluna", "Estrella", "Planeta", "Terra", "Mart", "Núvol", "Pluja", "Neu", "Vent", "Tempesta", "Llampec", "Arc de Sant Martí", "Foc", "Aigua", "Aire", "Gel"],
@@ -378,16 +378,20 @@
             document.getElementById('setup-screen').classList.remove('hidden');
             document.getElementById('setup-screen').classList.add('flex');
 
-            // Forcem el reinici de l'animació netejant el src i posant un nou timestamp
+            // --- CORRECCIÓ DE REINICI D'ANIMACIÓ ---
             const logo = document.getElementById('main-logo');
+            const fallback = document.getElementById('fallback-title');
             const cleanUrl = "https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp";
             
-            logo.classList.add('hidden'); 
-            logo.src = ""; 
+            // Primer ocultem el fallback i preparem la imatge
+            fallback.classList.add('hidden');
+            logo.classList.remove('hidden');
             
+            // Forcem recàrrega de la imatge amb un timestamp per assegurar el reinici del WebP
+            logo.src = ""; // Netegem src per evitar l'error persistente
             setTimeout(() => {
                 logo.src = cleanUrl + "?t=" + Date.now();
-            }, 50);
+            }, 10);
         }
     </script>
 </body>
