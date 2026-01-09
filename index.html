@@ -140,7 +140,7 @@
                         <div class="relative">
                             <input type="checkbox" id="random-mode" class="sr-only peer">
                             <div class="w-10 h-5 bg-slate-800 rounded-full peer peer-checked:bg-red-500/80 transition-all duration-300"></div>
-                            <div class="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-all duration-300 peer-checked:translate-x-5"></div>
+                            <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all duration-300 peer-checked:translate-x-5"></div>
                         </div>
                         <span class="ml-3 text-slate-500 font-semibold uppercase text-[8px] tracking-widest">Mode Aleatori</span>
                     </label>
@@ -177,7 +177,7 @@
     </div>
 
     <!-- PANTALLA FINAL -->
-    <div id="end-screen" class="hidden flex flex-col items-center justify-start h-screen w-full pt-12 pb-36 px-8 text-center bg-slate-950 space-y-8 max-w-md mx-auto">
+    <div id="end-screen" class="hidden flex flex-col items-center justify-start h-screen w-full pt-12 pb-36 px-8 text-center bg-slate-950 space-y-8 max-md mx-auto">
         <div class="space-y-2">
             <h2 class="text-3xl font-black text-emerald-500 uppercase italic tracking-tight">ROLS ASSIGNATS</h2>
             <p class="text-slate-500 text-xs">Tots els jugadors coneixen la seva identitat.</p>
@@ -266,11 +266,11 @@
                     staticImg.style.opacity = "0";
                     animImg.style.opacity = "1";
                     
-                    // Al cap de 20 segons, fem el fos encadenat de tornada a l'estàtica
+                    // Al cap de 10 segons (10000ms), fem el fos encadenat de tornada a l'estàtica
                     setTimeout(() => {
                         staticImg.style.opacity = "1";
                         animImg.style.opacity = "0";
-                    }, 20000);
+                    }, 10000);
                 }, 50); // Petit retard per assegurar el renderitzat
             };
         }
