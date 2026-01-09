@@ -94,17 +94,20 @@
             <!-- Contenidor del logo amb dues capes per al cross-fade -->
             <div id="logo-container" class="relative min-h-[200px] flex items-center justify-center w-full overflow-hidden">
                 
-                <!-- Capa Estàtica -->
+                <!-- Capa Estàtica: Sempre a punt per quan no hi ha vídeo -->
                 <img id="logo-static" 
                      src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/titol_impostor.png" 
                      alt="IMPOSTOR" 
                      class="fade-layer opacity-100 w-full max-w-[200px] h-auto drop-shadow-2xl z-10"
                      onerror="this.style.display='none'; document.getElementById('fallback-title').classList.remove('hidden');">
                 
-                <!-- Capa Animada (es crea/carrega dinàmicament per reiniciar el frame 0) -->
-                <img id="logo-anim" 
-                     class="fade-layer opacity-0 w-full max-w-[200px] h-auto drop-shadow-2xl z-20"
-                     alt="IMPOSTOR ANIMACIÓ">
+                <!-- Capa de Vídeo MP4: Apareix per sobre de l'estàtica -->
+                <video id="logo-video" 
+                       class="fade-layer opacity-0 w-full max-w-[200px] h-auto drop-shadow-2xl z-20"
+                       muted 
+                       playsinline
+                       preload="auto">
+                </video>
 
                 <div id="fallback-title" class="hidden text-center z-30">
                     <h1 class="text-3xl font-black tracking-tighter italic text-red-500 uppercase impostor-glow">IMPOSTOR</h1>
@@ -118,6 +121,7 @@
 
         <!-- Part Central: Controls de joc -->
         <div class="w-full space-y-5">
+            <!-- Selector Jugadors -->
             <div class="space-y-2">
                 <label class="block text-center text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Número de jugadors</label>
                 <div class="flex items-center justify-between glass-panel rounded-2xl p-1.5">
@@ -127,6 +131,7 @@
                 </div>
             </div>
 
+            <!-- Selector Impostors -->
             <div class="space-y-2">
                 <label class="block text-center text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Número d'impostors</label>
                 <div class="flex items-center justify-between glass-panel rounded-2xl p-1.5">
@@ -168,7 +173,7 @@
     <!-- PANTALLA DE REVELACIÓ -->
     <div id="reveal-screen" class="hidden flex flex-col items-center justify-start h-screen w-full pt-12 pb-32 px-8 text-center bg-slate-950 space-y-8">
         <div id="role-display" class="w-full flex flex-col items-center">
-            <!-- Dinàmic -->
+            <!-- Contingut dinàmic -->
         </div>
 
         <button onclick="nextTurn()" class="w-full max-w-xs py-5 glass-panel rounded-2xl font-bold text-base uppercase tracking-widest text-slate-400 active:bg-slate-800 transition-colors">
@@ -226,7 +231,7 @@
         };
 
         const baseUrl = "https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/";
-        const animatedLogoUrl = baseUrl + "impostor.webp";
+        const videoLogoUrl = baseUrl + "impostor.mp4";
         
         let workingCategories = JSON.parse(JSON.stringify(wordCategories));
         let unusedCategoryKeys = [];
@@ -245,36 +250,40 @@
             actualImpostors: 0
         };
 
-        // Gestió de l'animació amb transició de fos encadenat
+        // Funció per carregar i gestionar el vídeo amb fos encadenat
         function triggerIntroAnimation() {
             const staticImg = document.getElementById('logo-static');
-            const animImg = document.getElementById('logo-anim');
+            const videoElem = document.getElementById('logo-video');
             
-            // Assegurem l'estat inicial
+            // Per seguretat, restablim estats cada vegada
             staticImg.style.opacity = "1";
-            animImg.style.opacity = "0";
+            videoElem.style.opacity = "0";
             
-            // Carreguem l'animació en un element temporal per forçar reinici
-            const nextAnim = new Image();
-            nextAnim.src = animatedLogoUrl + "?t=" + Date.now();
-            
-            nextAnim.onload = () => {
-                // Posem el nou src i fem el fos encadenat cap a l'animació
-                animImg.src = nextAnim.src;
-                
-                setTimeout(() => {
+            // Netegem esdeveniments anteriors si n'hi hagués
+            videoElem.oncanplay = null;
+
+            // Timestamp per forçar iOS a carregar-lo com un recurs fresc i reproduir del frame 0
+            videoElem.src = videoLogoUrl + "?t=" + Date.now();
+            videoElem.load();
+
+            videoElem.oncanplay = () => {
+                videoElem.play().then(() => {
+                    // Fem el fos: estàtica fora, vídeo dins
                     staticImg.style.opacity = "0";
-                    animImg.style.opacity = "1";
+                    videoElem.style.opacity = "1";
                     
-                    // Al cap de 10 segons (10000ms), fem el fos encadenat de tornada a l'estàtica
+                    // Al cap de 10 segons (10000ms), tornem a l'estàtica
                     setTimeout(() => {
                         staticImg.style.opacity = "1";
-                        animImg.style.opacity = "0";
+                        videoElem.style.opacity = "0";
                     }, 10000);
-                }, 50); // Petit retard per assegurar el renderitzat
+                }).catch(err => {
+                    console.log("Error en autoplay:", err);
+                });
             };
         }
 
+        // Executar al carregar la pàgina
         window.onload = triggerIntroAnimation;
 
         function adjustValue(id, delta) {
@@ -407,6 +416,7 @@
             document.getElementById('setup-screen').classList.remove('hidden');
             document.getElementById('setup-screen').classList.add('flex');
 
+            // Reiniciem l'animació de benvinguda amb el vídeo mp4
             triggerIntroAnimation();
         }
     </script>
