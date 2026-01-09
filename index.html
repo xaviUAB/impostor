@@ -47,9 +47,10 @@
 <body class="min-h-screen flex items-center justify-center overflow-hidden">
 
     <!-- Pantalla de Configuració -->
-    <div id="setup-screen" class="flex flex-col items-center justify-between h-screen w-full py-12 px-6 max-w-md mx-auto">
-        <div class="w-full flex justify-center pt-4">
-            <!-- Imatge del títol reduïda -->
+    <div id="setup-screen" class="flex flex-col items-center justify-between h-screen w-full pt-8 pb-20 px-6 max-w-md mx-auto">
+        <!-- Secció Superior: Títol i Botó Principal -->
+        <div class="w-full flex flex-col items-center pt-4 space-y-6">
+            <!-- Imatge del títol -->
             <img id="main-logo" 
                  src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/titol_impostor.png" 
                  alt="IMPOSTOR" 
@@ -62,9 +63,14 @@
                 <h1 class="text-4xl font-black tracking-tighter italic text-red-600 uppercase impostor-title-text leading-none">IMPOSTOR</h1>
                 <div class="h-1 w-16 bg-red-600 mx-auto mt-2 rounded-full opacity-50"></div>
             </div>
+
+            <!-- Botó "Repartir Rols" -->
+            <button onclick="startGame()" class="w-full py-5 bg-red-600 hover:bg-red-500 rounded-2xl font-black text-xl shadow-xl transition transform active:scale-95 uppercase tracking-tighter">
+                REPARTIR ROLS
+            </button>
         </div>
 
-        <!-- Controls alineats a la part inferior -->
+        <!-- Secció Inferior: Controls de configuració -->
         <div class="w-full space-y-6">
             <!-- Control Jugadors -->
             <div>
@@ -97,15 +103,11 @@
                     </label>
                 </div>
             </div>
-
-            <button onclick="startGame()" class="w-full py-5 bg-red-600 hover:bg-red-500 rounded-2xl font-black text-xl shadow-xl transition transform active:scale-95 uppercase tracking-tighter">
-                REPARTIR ROLS
-            </button>
         </div>
     </div>
 
     <!-- Pantalla de Transició (Següent Jugador) -->
-    <div id="transition-screen" class="hidden full-screen-btn gradient-bg">
+    <div id="transition-screen" class="hidden full-screen-btn gradient-bg pb-20">
         <div class="text-center p-6 w-full h-full flex flex-col justify-center items-center">
             <h2 id="player-turn-text" class="text-5xl font-black mb-2 uppercase italic text-red-600 impostor-title-text">Jugador 1</h2>
             <p class="text-slate-400 mb-16 font-medium uppercase tracking-widest">Passa el dispositiu i clica el botó</p>
@@ -117,7 +119,7 @@
     </div>
 
     <!-- Pantalla de Revelació -->
-    <div id="reveal-screen" class="hidden flex flex-col items-center justify-between h-screen w-full py-12 px-6 text-center">
+    <div id="reveal-screen" class="hidden flex flex-col items-center justify-between h-screen w-full pt-8 pb-20 px-6 text-center">
         <div class="flex-1 flex flex-col items-center justify-center">
             <div id="role-display" class="space-y-4 flex flex-col items-center">
                 <!-- Contingut dinàmic -->
@@ -130,7 +132,7 @@
     </div>
 
     <!-- Pantalla Final -->
-    <div id="end-screen" class="hidden flex flex-col items-center justify-between h-screen w-full py-12 px-6 text-center max-w-md mx-auto">
+    <div id="end-screen" class="hidden flex flex-col items-center justify-between h-screen w-full pt-8 pb-20 px-6 text-center max-w-md mx-auto">
         <div class="flex-1 flex flex-col items-center justify-center space-y-8">
             <h2 class="text-3xl font-black text-green-500 uppercase italic">ROLS ASSIGNATS</h2>
             <p class="text-slate-300">Tothom ja sap qui és. Comenceu la discussió!</p>
@@ -151,7 +153,7 @@
             "Llar": ["Cadira", "Taula", "Sofà", "Llit", "Armari", "Mirall", "Llampa", "Catifa", "Cortina", "Rellotge", "Nevera", "Forn", "Microones", "Rentadora", "Rentaplats", "Televisor", "Ordinador", "Telèfon", "Ràdio", "Clau", "Martell", "Tornavís", "Alicates", "Escala", "Recollidor", "Escombra", "Pala", "Ventilador", "Paraigua", "Maleta"],
             "Roba": ["Samarreta", "Pantalons", "Jaqueta", "Abric", "Faldilla", "Vestit", "Jersei", "Mitjons", "Sabates", "Botes", "Sandàlies", "Gorra", "Barret", "Bufanda", "Guants", "Cinturó", "Corbata", "Pijama", "Barnús", "Roba interior", "Ulleres", "Rellotge de polsera", "Bossa", "Motxilla", "Moneder", "Collaret", "Anell", "Arracades", "Polsera"],
             "Animals": ["Gos", "Gat", "Cavall", "Vaca", "Porc", "Ovella", "Cabra", "Gallina", "Gall", "Ànec", "Elefant", "Lleó", "Tigre", "Girafa", "Zebra", "Mico", "Os", "Llop", "Guineu", "Conill", "Ratolí", "Serp", "Cocodril", "Tortuga", "Rana", "Peix", "Tauró", "Dofí", "Balena", "Pingüí", "Àguila", "Mussol", "Lloro", "Abella", "Papallona", "Aranya"],
-            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
+            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
             "Transport": ["Cotxe", "Autobús", "Tren", "Metro", "Tramvia", "Bicicleta", "Moto", "Avió", "Helicòpter", "Vaixell", "Submarí", "Coet", "Tractor", "Camió", "Taxi", "Ambulància", "Grúa", "Caravana", "Veler", "Canoa"],
             "Llocs": ["Escola", "Universitat", "Hospital", "Església", "Museu", "Teatre", "Cine", "Biblioteca", "Restaurant", "Hotel", "Supermercat", "Mercat", "Parc", "Platja", "Muntanya", "Bosc", "Riu", "Llac", "Mar", "Illa", "Desert", "Castell", "Pont", "Aeroport", "Estació", "Gimnàs", "Piscina", "Estadi", "Banc", "Oficina", "Selva"],
             "Espai i Clima": ["Sol", "Lluna", "Estrella", "Planeta", "Terra", "Mart", "Núvol", "Pluja", "Neu", "Vent", "Tempesta", "Llampec", "Arc de Sant Martí", "Foc", "Aigua", "Aire", "Gel"],
