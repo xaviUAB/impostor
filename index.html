@@ -51,7 +51,7 @@
 
         .character-img {
             filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
-            max-height: 220px;
+            max-height: 200px;
         }
 
         /* Animació de pols per al botó de transició */
@@ -66,61 +66,63 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center overflow-hidden bg-slate-950">
+<body class="min-h-screen flex items-start justify-center overflow-hidden bg-slate-950">
 
     <!-- PANTALLA DE CONFIGURACIÓ -->
-    <div id="setup-screen" class="flex flex-col items-center justify-between h-screen w-full pt-10 pb-20 px-8 max-w-md mx-auto">
+    <!-- Ajustada a items-start i reduït el padding per pujar-ho tot -->
+    <div id="setup-screen" class="flex flex-col items-center justify-start h-screen w-full pt-6 pb-16 px-8 max-w-md mx-auto space-y-6">
         
         <!-- Part Superior: Marca i Inici -->
-        <div class="w-full flex flex-col items-center space-y-8">
+        <div class="w-full flex flex-col items-center space-y-5">
             <div class="relative">
                 <img id="main-logo" 
                      src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/titol_impostor.png" 
                      alt="IMPOSTOR" 
-                     class="w-full max-w-[180px] h-auto drop-shadow-2xl"
+                     class="w-full max-w-[160px] h-auto drop-shadow-2xl"
                      onload="this.classList.remove('hidden'); document.getElementById('fallback-title').classList.add('hidden');"
                      onerror="this.classList.add('hidden'); document.getElementById('fallback-title').classList.remove('hidden');">
                 
                 <div id="fallback-title" class="hidden text-center">
-                    <h1 class="text-4xl font-black tracking-tighter italic text-red-500 uppercase impostor-glow">IMPOSTOR</h1>
+                    <h1 class="text-3xl font-black tracking-tighter italic text-red-500 uppercase impostor-glow">IMPOSTOR</h1>
                 </div>
             </div>
 
-            <button onclick="startGame()" class="btn-primary w-full py-5 rounded-2xl font-black text-xl uppercase tracking-wider">
+            <!-- Botó "Repartir Rols" una mica més petit -->
+            <button onclick="startGame()" class="btn-primary w-full py-4 rounded-2xl font-black text-lg uppercase tracking-wider">
                 REPARTIR ROLS
             </button>
         </div>
 
-        <!-- Part Inferior: Controls de joc -->
-        <div class="w-full space-y-8">
+        <!-- Part Central-Inferior: Controls de joc compactats -->
+        <div class="w-full space-y-5">
             <!-- Selector Jugadors -->
-            <div class="space-y-3">
-                <label class="block text-center text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Número de jugadors</label>
-                <div class="flex items-center justify-between glass-panel rounded-3xl p-2">
-                    <button onclick="adjustValue('total-players', -1)" class="control-btn w-14 h-14 flex items-center justify-center rounded-2xl text-2xl font-light">－</button>
-                    <span id="display-total-players" class="text-3xl font-bold w-16 text-center text-slate-200">4</span>
-                    <button onclick="adjustValue('total-players', 1)" class="control-btn w-14 h-14 flex items-center justify-center rounded-2xl text-2xl font-light">＋</button>
+            <div class="space-y-2">
+                <label class="block text-center text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Número de jugadors</label>
+                <div class="flex items-center justify-between glass-panel rounded-2xl p-1.5">
+                    <button onclick="adjustValue('total-players', -1)" class="control-btn w-12 h-12 flex items-center justify-center rounded-xl text-xl font-light">－</button>
+                    <span id="display-total-players" class="text-2xl font-bold w-14 text-center text-slate-200">4</span>
+                    <button onclick="adjustValue('total-players', 1)" class="control-btn w-12 h-12 flex items-center justify-center rounded-xl text-xl font-light">＋</button>
                 </div>
             </div>
 
             <!-- Selector Impostors -->
-            <div class="space-y-3">
-                <label class="block text-center text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Número d'impostors</label>
-                <div class="flex items-center justify-between glass-panel rounded-3xl p-2">
-                    <button onclick="adjustValue('total-impostors', -1)" class="control-btn w-14 h-14 flex items-center justify-center rounded-2xl text-2xl font-light">－</button>
-                    <span id="display-total-impostors" class="text-3xl font-bold w-16 text-center text-slate-200">1</span>
-                    <button onclick="adjustValue('total-impostors', 1)" class="w-14 h-14 flex items-center justify-center rounded-2xl text-2xl font-light">＋</button>
+            <div class="space-y-2">
+                <label class="block text-center text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Número d'impostors</label>
+                <div class="flex items-center justify-between glass-panel rounded-2xl p-1.5">
+                    <button onclick="adjustValue('total-impostors', -1)" class="control-btn w-12 h-12 flex items-center justify-center rounded-xl text-xl font-light">－</button>
+                    <span id="display-total-impostors" class="text-2xl font-bold w-14 text-center text-slate-200">1</span>
+                    <button onclick="adjustValue('total-impostors', 1)" class="control-btn w-12 h-12 flex items-center justify-center rounded-xl text-xl font-light">＋</button>
                 </div>
                 
                 <!-- Toggle Mode Aleatori -->
-                <div class="flex items-center justify-center pt-2">
-                    <label class="flex items-center cursor-pointer">
+                <div class="flex items-center justify-center pt-1">
+                    <label class="flex items-center cursor-pointer p-2">
                         <div class="relative">
                             <input type="checkbox" id="random-mode" class="sr-only peer">
-                            <div class="w-11 h-6 bg-slate-800 rounded-full peer peer-checked:bg-red-500/80 transition-all duration-300"></div>
-                            <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all duration-300 peer-checked:translate-x-5"></div>
+                            <div class="w-10 h-5 bg-slate-800 rounded-full peer peer-checked:bg-red-500/80 transition-all duration-300"></div>
+                            <div class="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-all duration-300 peer-checked:translate-x-5"></div>
                         </div>
-                        <span class="ml-3 text-slate-500 font-semibold uppercase text-[9px] tracking-widest">Mode Aleatori</span>
+                        <span class="ml-3 text-slate-500 font-semibold uppercase text-[8px] tracking-widest">Mode Aleatori</span>
                     </label>
                 </div>
             </div>
@@ -135,11 +137,11 @@
                 <p class="text-slate-500 text-[10px] uppercase font-bold tracking-[0.3em]">És el teu torn</p>
             </div>
             
-            <div class="w-64 h-64 glass-panel rounded-full flex items-center justify-center pulse-effect active:scale-95 transition-transform duration-200 cursor-pointer" onclick="revealRole()">
-                <span class="text-slate-300 font-black text-sm text-center px-12 uppercase leading-relaxed tracking-widest">Clica per revelar el teu rol</span>
+            <div class="w-60 h-60 glass-panel rounded-full flex items-center justify-center pulse-effect active:scale-95 transition-transform duration-200 cursor-pointer" onclick="revealRole()">
+                <span class="text-slate-300 font-black text-xs text-center px-10 uppercase leading-relaxed tracking-widest">Clica per revelar el teu rol</span>
             </div>
             
-            <p class="text-slate-600 text-xs italic">Assegura't que ningú més mira</p>
+            <p class="text-slate-600 text-[10px] italic">Assegura't que ningú més mira</p>
         </div>
     </div>
 
@@ -151,26 +153,26 @@
             </div>
         </div>
 
-        <button onclick="nextTurn()" class="w-full max-w-xs py-5 glass-panel rounded-2xl font-bold text-lg uppercase tracking-widest text-slate-400 active:bg-slate-800 transition-colors">
+        <button onclick="nextTurn()" class="w-full max-w-xs py-5 glass-panel rounded-2xl font-bold text-base uppercase tracking-widest text-slate-400 active:bg-slate-800 transition-colors">
             Ocultar Assignació
         </button>
     </div>
 
     <!-- PANTALLA FINAL -->
     <div id="end-screen" class="hidden flex flex-col items-center justify-between h-screen w-full pt-10 pb-20 px-8 text-center bg-slate-950">
-        <div class="flex-1 flex flex-col items-center justify-center space-y-10 w-full">
+        <div class="flex-1 flex flex-col items-center justify-center space-y-8 w-full">
             <div class="space-y-2">
                 <h2 class="text-3xl font-black text-emerald-500 uppercase italic tracking-tight">ROLS ASSIGNATS</h2>
-                <p class="text-slate-500 text-sm">Tots els jugadors coneixen la seva identitat.</p>
+                <p class="text-slate-500 text-xs">Tots els jugadors coneixen la seva identitat.</p>
             </div>
 
-            <div class="p-8 glass-panel rounded-3xl w-full border-emerald-500/20">
-                <p class="text-[9px] text-slate-500 uppercase font-black mb-4 tracking-[0.2em]">Detalls de la partida</p>
-                <div id="game-summary" class="text-2xl font-bold text-slate-200 mb-1"></div>
-                <div id="game-mode-info" class="text-[10px] text-slate-500 italic"></div>
+            <div class="p-6 glass-panel rounded-3xl w-full border-emerald-500/20">
+                <p class="text-[8px] text-slate-500 uppercase font-black mb-3 tracking-[0.2em]">Detalls de la partida</p>
+                <div id="game-summary" class="text-xl font-bold text-slate-200 mb-1"></div>
+                <div id="game-mode-info" class="text-[9px] text-slate-500 italic"></div>
             </div>
             
-            <p class="text-slate-400 text-sm italic">Comenceu el debat!</p>
+            <p class="text-slate-400 text-xs italic">Comenceu el debat!</p>
         </div>
         
         <button onclick="resetGame()" class="w-full py-5 bg-slate-800 rounded-2xl font-bold uppercase tracking-widest text-slate-300 active:bg-slate-700 transition-colors">
@@ -323,22 +325,22 @@
             if (role === "IMPOSTOR") {
                 const impostorImg = Math.random() > 0.5 ? "impostor.png" : "impostora.png";
                 display.innerHTML = `
-                    <img src="${baseUrl}${impostorImg}" class="character-img mb-8" alt="Impostor">
+                    <img src="${baseUrl}${impostorImg}" class="character-img mb-6" alt="Impostor">
                     <div class="space-y-1">
-                        <p class="text-slate-500 font-bold uppercase text-[9px] tracking-[0.3em]">Identitat Secreta</p>
-                        <h1 class="text-5xl font-black text-white uppercase italic tracking-tighter impostor-glow">ETS L'IMPOSTOR</h1>
+                        <p class="text-slate-500 font-bold uppercase text-[8px] tracking-[0.3em]">Identitat Secreta</p>
+                        <h1 class="text-4xl font-black text-white uppercase italic tracking-tighter impostor-glow">ETS L'IMPOSTOR</h1>
                     </div>
                 `;
             } else {
                 const civilImg = Math.random() > 0.5 ? "civil1.png" : "civil2.png";
                 display.innerHTML = `
-                    <img src="${baseUrl}${civilImg}" class="character-img mb-8" alt="Civil">
-                    <div class="space-y-1 mb-6">
-                        <p class="text-slate-500 font-bold uppercase text-[9px] tracking-[0.3em]">Paraula de la Partida</p>
-                        <h1 class="text-6xl font-black text-white uppercase tracking-tight leading-tight">${role}</h1>
+                    <img src="${baseUrl}${civilImg}" class="character-img mb-6" alt="Civil">
+                    <div class="space-y-1 mb-5">
+                        <p class="text-slate-500 font-bold uppercase text-[8px] tracking-[0.3em]">Paraula de la Partida</p>
+                        <h1 class="text-5xl font-black text-white uppercase tracking-tight leading-tight">${role}</h1>
                     </div>
-                    <div class="glass-panel px-6 py-2 rounded-full inline-block">
-                        <p class="text-slate-400 font-bold uppercase text-[9px] tracking-[0.2em] italic">${gameData.currentCategory}</p>
+                    <div class="glass-panel px-5 py-2 rounded-full inline-block">
+                        <p class="text-slate-400 font-bold uppercase text-[8px] tracking-[0.2em] italic">${gameData.currentCategory}</p>
                     </div>
                 `;
             }
