@@ -82,7 +82,7 @@
         <!-- Part Superior: Marca i Inici -->
         <div class="w-full flex flex-col items-center space-y-5">
             <div id="logo-container" class="relative min-h-[200px] flex items-center justify-center w-full">
-                <!-- Imatge d'animació principal - Visible per defecte per evitar el quadre negre -->
+                <!-- Imatge d'animació principal -->
                 <img id="main-logo" 
                      src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp" 
                      alt="IMPOSTOR" 
@@ -183,7 +183,7 @@
             "Llar": ["Cadira", "Taula", "Sofà", "Llit", "Armari", "Mirall", "Llampa", "Catifa", "Cortina", "Rellotge", "Nevera", "Forn", "Microones", "Rentadora", "Rentaplats", "Televisor", "Ordinador", "Telèfon", "Ràdio", "Clau", "Martell", "Tornavís", "Alicates", "Escala", "Recollidor", "Escombra", "Pala", "Ventilador", "Paraigua", "Maleta"],
             "Roba": ["Samarreta", "Pantalons", "Jaqueta", "Abric", "Faldilla", "Vestit", "Jersei", "Mitjons", "Sabates", "Botes", "Sandàlies", "Gorra", "Barret", "Bufanda", "Guants", "Cinturó", "Corbata", "Pijama", "Barnús", "Roba interior", "Ulleres", "Rellotge de polsera", "Bossa", "Motxilla", "Moneder", "Collaret", "Anell", "Arracades", "Polsera"],
             "Animals": ["Gos", "Gat", "Cavall", "Vaca", "Porc", "Ovella", "Cabra", "Gallina", "Gall", "Ànec", "Elefant", "Lleó", "Tigre", "Girafa", "Zebra", "Mico", "Os", "Llop", "Guineu", "Conill", "Ratolí", "Serp", "Cocodril", "Tortuga", "Rana", "Peix", "Tauró", "Dofí", "Balena", "Pingüí", "Àguila", "Mussol", "Lloro", "Abella", "Papallona", "Aranya"],
-            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
+            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
             "Transport": ["Cotxe", "Autobús", "Tren", "Metro", "Tramvia", "Bicicleta", "Moto", "Avió", "Helicòpter", "Vaixell", "Submarí", "Coet", "Tractor", "Camió", "Taxi", "Ambulància", "Grúa", "Caravana", "Veler", "Canoa"],
             "Llocs": ["Escola", "Universitat", "Hospital", "Església", "Museu", "Teatre", "Cine", "Biblioteca", "Restaurant", "Hotel", "Supermercat", "Mercat", "Parc", "Platja", "Muntanya", "Bosc", "Riu", "Llac", "Mar", "Illa", "Desert", "Castell", "Pont", "Aeroport", "Estació", "Gimnàs", "Piscina", "Estadi", "Banc", "Oficina", "Selva"],
             "Espai i Clima": ["Sol", "Lluna", "Estrella", "Planeta", "Terra", "Mart", "Núvol", "Pluja", "Neu", "Vent", "Tempesta", "Llampec", "Arc de Sant Martí", "Foc", "Aigua", "Aire", "Gel"],
@@ -355,34 +355,29 @@
             document.getElementById('setup-screen').classList.remove('hidden');
             document.getElementById('setup-screen').classList.add('flex');
 
-            // --- REINICI ROBUST I VISIBLE ---
             const container = document.getElementById('logo-container');
+            const oldLogo = document.getElementById('main-logo');
             const fallback = document.getElementById('fallback-title');
             const cleanUrl = "https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp";
             
-            // Eliminem l'element antic
-            const oldLogo = document.getElementById('main-logo');
-            if (oldLogo) oldLogo.remove();
+            // --- CÀRREGA EN SEGON PLA PER EVITAR EL QUADRE NEGRE ---
+            const nextLogo = new Image();
+            // Li passem un timestamp per forçar el reinici del frame 0 a iOS/Android
+            nextLogo.src = cleanUrl + "?t=" + Date.now();
             
-            // Amaguem el fallback per si de cas
-            fallback.classList.add('hidden');
-
-            // Creem el nou element visible des de l'inici per evitar el negre
-            const newLogo = document.createElement('img');
-            newLogo.id = 'main-logo';
-            newLogo.className = 'w-full max-w-[200px] h-auto drop-shadow-2xl'; 
-            newLogo.alt = 'IMPOSTOR';
-            
-            // Gestió d'errors millorada
-            newLogo.onerror = function() {
-                this.style.display = 'none';
-                fallback.classList.remove('hidden');
+            // Mentrestant l'antic segueix visible. Quan el nou estigui a la memòria, fem el canvi.
+            nextLogo.onload = function() {
+                if (oldLogo) {
+                    oldLogo.src = nextLogo.src;
+                    oldLogo.style.display = 'block';
+                    fallback.classList.add('hidden');
+                }
             };
             
-            // Timestamp per forçar el reinici del WebP
-            newLogo.src = cleanUrl + "?t=" + Date.now();
-            
-            container.prepend(newLogo);
+            nextLogo.onerror = function() {
+                if (oldLogo) oldLogo.style.display = 'none';
+                fallback.classList.remove('hidden');
+            };
         }
     </script>
 </body>
