@@ -62,6 +62,7 @@
             max-height: 180px;
         }
 
+        /* Animació de pols per al botó de transició */
         @keyframes soft-pulse {
             0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1); }
             70% { box-shadow: 0 0 0 30px rgba(255, 255, 255, 0); }
@@ -80,11 +81,12 @@
         
         <!-- Part Superior: Marca i Inici -->
         <div class="w-full flex flex-col items-center space-y-5">
-            <div class="relative">
+            <div class="relative min-h-[200px] flex items-center justify-center">
+                <!-- Imatge d'animació principal (augmentada un 25%) -->
                 <img id="main-logo" 
                      src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp" 
                      alt="IMPOSTOR" 
-                     class="w-full max-w-[160px] h-auto drop-shadow-2xl"
+                     class="w-full max-w-[200px] h-auto drop-shadow-2xl"
                      onload="this.classList.remove('hidden'); document.getElementById('fallback-title').classList.add('hidden');"
                      onerror="this.classList.add('hidden'); document.getElementById('fallback-title').classList.remove('hidden');">
                 
@@ -94,11 +96,11 @@
             </div>
 
             <button onclick="startGame()" class="btn-primary w-full py-4 rounded-2xl font-black text-lg uppercase tracking-wider">
-                REPARTIR ROLS
+                JUGAR A L'IMPOSTOR
             </button>
         </div>
 
-        <!-- Part Central-Inferior: Controls de joc -->
+        <!-- Part Central-Inferior: Controls de joc compactats -->
         <div class="w-full space-y-5">
             <!-- Selector Jugadors -->
             <div class="space-y-2">
@@ -134,11 +136,11 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE TRANSICIÓ -->
+    <!-- PANTALLA DE TRANSICIÓ (PASSAR MÒBIL) -->
     <div id="transition-screen" class="hidden full-screen-btn bg-slate-950 pb-32">
         <div class="text-center p-8 w-full h-full flex flex-col justify-start items-center pt-12 space-y-10">
             <div>
-                <h2 id="player-turn-text" class="text-5xl font-black uppercase italic text-red-500 mb-2 impostor-glow">Jugador 1</h2>
+                <h2 id="player-turn-text" class="text-5xl font-black uppercase italic text-red-600 mb-2 impostor-glow">Jugador 1</h2>
                 <p class="text-slate-500 text-[10px] uppercase font-bold tracking-[0.3em]">És el teu torn</p>
             </div>
             
@@ -376,10 +378,16 @@
             document.getElementById('setup-screen').classList.remove('hidden');
             document.getElementById('setup-screen').classList.add('flex');
 
-            // Reiniciar l'animació forçant la càrrega de la imatge amb un timestamp
+            // Forcem el reinici de l'animació netejant el src i posant un nou timestamp
             const logo = document.getElementById('main-logo');
             const cleanUrl = "https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp";
-            logo.src = cleanUrl + "?t=" + new Date().getTime();
+            
+            logo.classList.add('hidden'); 
+            logo.src = ""; 
+            
+            setTimeout(() => {
+                logo.src = cleanUrl + "?t=" + Date.now();
+            }, 50);
         }
     </script>
 </body>
