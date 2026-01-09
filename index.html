@@ -10,7 +10,7 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #020617;
+            background-color: #020617; /* Blau molt fosc gairebé negre */
             color: #f8fafc;
             touch-action: manipulation;
             user-select: none;
@@ -62,6 +62,7 @@
             max-height: 180px;
         }
 
+        /* Animació de pols per al botó de transició */
         @keyframes soft-pulse {
             0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1); }
             70% { box-shadow: 0 0 0 30px rgba(255, 255, 255, 0); }
@@ -81,13 +82,12 @@
         <!-- Part Superior: Marca i Inici -->
         <div class="w-full flex flex-col items-center space-y-5">
             <div id="logo-container" class="relative min-h-[200px] flex items-center justify-center w-full">
-                <!-- Imatge d'animació principal -->
+                <!-- Imatge d'animació principal - Visible per defecte per evitar el quadre negre -->
                 <img id="main-logo" 
                      src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp" 
                      alt="IMPOSTOR" 
                      class="w-full max-w-[200px] h-auto drop-shadow-2xl"
-                     onload="this.classList.remove('hidden'); document.getElementById('fallback-title').classList.add('hidden');"
-                     onerror="this.classList.add('hidden'); document.getElementById('fallback-title').classList.remove('hidden');">
+                     onerror="this.style.display='none'; document.getElementById('fallback-title').classList.remove('hidden');">
                 
                 <div id="fallback-title" class="hidden text-center">
                     <h1 class="text-3xl font-black tracking-tighter italic text-red-500 uppercase impostor-glow">IMPOSTOR</h1>
@@ -283,6 +283,7 @@
                 }
             }
             document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.remove('flex');
             showTransition();
         }
 
@@ -354,34 +355,33 @@
             document.getElementById('setup-screen').classList.remove('hidden');
             document.getElementById('setup-screen').classList.add('flex');
 
-            // --- REINICI ROBUST PER A iOS ---
+            // --- REINICI ROBUST I VISIBLE ---
             const container = document.getElementById('logo-container');
+            const fallback = document.getElementById('fallback-title');
             const cleanUrl = "https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp";
             
-            // Eliminem l'element antic per netejar la memòria de Safari/iOS
+            // Eliminem l'element antic
             const oldLogo = document.getElementById('main-logo');
             if (oldLogo) oldLogo.remove();
             
-            // Creem el nou element de zero
+            // Amaguem el fallback per si de cas
+            fallback.classList.add('hidden');
+
+            // Creem el nou element visible des de l'inici per evitar el negre
             const newLogo = document.createElement('img');
             newLogo.id = 'main-logo';
-            newLogo.className = 'w-full max-w-[200px] h-auto drop-shadow-2xl hidden'; // Amagat fins que carregui
+            newLogo.className = 'w-full max-w-[200px] h-auto drop-shadow-2xl'; 
             newLogo.alt = 'IMPOSTOR';
             
-            newLogo.onload = function() {
-                this.classList.remove('hidden');
-                document.getElementById('fallback-title').classList.add('hidden');
-            };
-            
+            // Gestió d'errors millorada
             newLogo.onerror = function() {
-                this.classList.add('hidden');
-                document.getElementById('fallback-title').classList.remove('hidden');
+                this.style.display = 'none';
+                fallback.classList.remove('hidden');
             };
             
-            // Afegim un paràmetre únic per forçar el reinici del frame 0 del WebP animat
+            // Timestamp per forçar el reinici del WebP
             newLogo.src = cleanUrl + "?t=" + Date.now();
             
-            // L'afegim al contenidor abans del fallback
             container.prepend(newLogo);
         }
     </script>
