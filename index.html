@@ -34,6 +34,14 @@
             z-index: 50;
             transition: all 0.3s ease;
         }
+
+        .impostor-title-text {
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .role-img {
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.1));
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -41,14 +49,27 @@
     <!-- Pantalla de Configuració -->
     <div id="setup-screen" class="w-full max-w-md space-y-8 bg-slate-800 p-8 rounded-3xl shadow-2xl border border-slate-700">
         <div class="text-center">
-            <h1 class="text-4xl font-black tracking-tighter mb-2 italic text-red-500 uppercase">IMPOSTOR</h1>
-            <p class="text-slate-400">Configura la teva partida</p>
+            <!-- Imatge del títol -->
+            <img id="main-logo" 
+                 src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/titol_impostor.png" 
+                 alt="IMPOSTOR" 
+                 class="mx-auto w-full max-w-[280px] h-auto drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]"
+                 onload="this.classList.remove('hidden'); document.getElementById('fallback-title').classList.add('hidden');"
+                 onerror="this.classList.add('hidden'); document.getElementById('fallback-title').classList.remove('hidden');">
+            
+            <!-- Fallback en cas que la imatge no carregui -->
+            <div id="fallback-title" class="py-4">
+                <h1 class="text-5xl font-black tracking-tighter italic text-red-600 uppercase impostor-title-text leading-none">IMPOSTOR</h1>
+                <div class="h-1 w-24 bg-red-600 mx-auto mt-2 rounded-full opacity-50"></div>
+            </div>
+            
+            <p class="text-slate-400 mt-4 text-sm font-medium uppercase tracking-widest">Configura la teva partida</p>
         </div>
 
         <div class="space-y-8">
             <!-- Control Jugadors -->
             <div>
-                <label class="block text-center text-sm font-bold mb-4 text-slate-400 uppercase tracking-widest">Número de jugadors</label>
+                <label class="block text-center text-xs font-bold mb-4 text-slate-500 uppercase tracking-widest">Número de jugadors</label>
                 <div class="flex items-center justify-between bg-slate-900 rounded-2xl p-2 border border-slate-700">
                     <button onclick="adjustValue('total-players', -1)" class="w-16 h-16 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-3xl font-bold transition active:scale-90">-</button>
                     <span id="display-total-players" class="text-4xl font-black w-20 text-center">4</span>
@@ -58,7 +79,7 @@
 
             <!-- Control Impostors -->
             <div>
-                <label class="block text-center text-sm font-bold mb-4 text-slate-400 uppercase tracking-widest">Número d'impostors</label>
+                <label class="block text-center text-xs font-bold mb-4 text-slate-500 uppercase tracking-widest">Número d'impostors (màx)</label>
                 <div class="flex items-center justify-between bg-slate-900 rounded-2xl p-2 border border-slate-700">
                     <button onclick="adjustValue('total-impostors', -1)" class="w-16 h-16 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-3xl font-bold transition active:scale-90">-</button>
                     <span id="display-total-impostors" class="text-4xl font-black w-20 text-center">1</span>
@@ -66,33 +87,33 @@
                 </div>
                 
                 <!-- Toggle Aleatori -->
-                <div class="mt-4 flex items-center justify-center space-x-3">
+                <div class="mt-6 flex items-center justify-center space-x-3">
                     <label class="flex items-center cursor-pointer group">
                         <div class="relative">
                             <input type="checkbox" id="random-mode" class="sr-only peer">
                             <div class="w-12 h-6 bg-slate-700 rounded-full peer peer-checked:bg-red-600 transition-colors"></div>
-                            <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-6"></div>
+                            <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-6 shadow-md"></div>
                         </div>
-                        <span class="ml-3 text-slate-300 font-medium group-hover:text-white transition-colors uppercase text-xs tracking-wider">Mode aleatori</span>
+                        <span class="ml-3 text-slate-300 font-bold group-hover:text-white transition-colors uppercase text-xs tracking-wider">Mode aleatori</span>
                     </label>
                 </div>
-                <p class="text-[10px] text-center text-slate-500 mt-2 italic px-4">Si s'activa, hi haurà entre 1 i el número indicat d'impostors.</p>
+                <p class="text-[10px] text-center text-slate-500 mt-3 italic px-4 leading-tight">Si s'activa, hi haurà entre 1 i el número indicat d'impostors. Els jugadors no sabran quants n'hi ha.</p>
             </div>
 
-            <button onclick="startGame()" class="w-full py-6 bg-red-600 hover:bg-red-500 rounded-2xl font-black text-2xl shadow-lg transition transform active:scale-95 uppercase tracking-tighter">
+            <button onclick="startGame()" class="w-full py-6 bg-red-600 hover:bg-red-500 rounded-2xl font-black text-2xl shadow-xl transition transform active:scale-95 uppercase tracking-tighter">
                 REPARTIR ROLS
             </button>
         </div>
     </div>
 
-    <!-- Pantalla de Transició (Botó gran per al següent jugador) -->
+    <!-- Pantalla de Transició (Següent Jugador) -->
     <div id="transition-screen" class="hidden full-screen-btn gradient-bg">
         <div class="text-center p-6 w-full h-full flex flex-col justify-center items-center">
-            <h2 id="player-turn-text" class="text-4xl font-black mb-2 uppercase italic text-red-500">Jugador 1</h2>
-            <p class="text-slate-400 mb-12">Passa el dispositiu i clica el botó</p>
+            <h2 id="player-turn-text" class="text-5xl font-black mb-2 uppercase italic text-red-600 impostor-title-text">Jugador 1</h2>
+            <p class="text-slate-400 mb-16 font-medium uppercase tracking-widest">Passa el dispositiu i clica el botó</p>
             
-            <div class="w-64 h-64 bg-slate-800 border-4 border-slate-700 rounded-full flex items-center justify-center shadow-[0_0_60px_rgba(0,0,0,0.5)] active:bg-slate-700 transition-colors cursor-pointer" onclick="revealRole()">
-                <span class="text-white font-black text-xl text-center px-8 uppercase leading-tight">CLICA PER VEURE EL TEU ROL</span>
+            <div class="w-72 h-72 bg-slate-800 border-4 border-slate-700 rounded-full flex items-center justify-center shadow-[0_0_80px_rgba(0,0,0,0.8)] active:bg-slate-700 active:scale-95 transition transform cursor-pointer group" onclick="revealRole()">
+                <span class="text-white font-black text-xl text-center px-10 uppercase leading-tight group-hover:scale-110 transition transform">CLICA PER VEURE EL TEU ROL</span>
             </div>
         </div>
     </div>
@@ -100,7 +121,7 @@
     <!-- Pantalla de Revelació -->
     <div id="reveal-screen" class="hidden flex flex-col items-center justify-between h-screen w-full py-12 px-6 text-center">
         <div class="flex-1 flex flex-col items-center justify-center">
-            <div id="role-display" class="space-y-4">
+            <div id="role-display" class="space-y-4 flex flex-col items-center">
                 <!-- Contingut dinàmic -->
             </div>
         </div>
@@ -125,13 +146,12 @@
     </div>
 
     <script>
-        // Diccionari de paraules estructurat per categories
         const wordCategories = {
             "Oficis": ["Advocat", "Arquitecte", "Astronauta", "Barber", "Bomber", "Cambrer", "Carnisser", "Científic", "Cuiner", "Dentista", "Escriptor", "Electricista", "Enfermer", "Fuster", "Fotògraf", "Informàtic", "Jutge", "Mecànic", "Metge", "Músic", "Pintor", "Pilot", "Policia", "Professor", "Psicòleg", "Veterinari", "Venedor", "Pagès", "Actor", "Ballarí"],
             "Llar": ["Cadira", "Taula", "Sofà", "Llit", "Armari", "Mirall", "Llampa", "Catifa", "Cortina", "Rellotge", "Nevera", "Forn", "Microones", "Rentadora", "Rentaplats", "Televisor", "Ordinador", "Telèfon", "Ràdio", "Clau", "Martell", "Tornavís", "Alicates", "Escala", "Recollidor", "Escombra", "Pala", "Ventilador", "Paraigua", "Maleta"],
             "Roba": ["Samarreta", "Pantalons", "Jaqueta", "Abric", "Faldilla", "Vestit", "Jersei", "Mitjons", "Sabates", "Botes", "Sandàlies", "Gorra", "Barret", "Bufanda", "Guants", "Cinturó", "Corbata", "Pijama", "Barnús", "Roba interior", "Ulleres", "Rellotge de polsera", "Bossa", "Motxilla", "Moneder", "Collaret", "Anell", "Arracades", "Polsera"],
             "Animals": ["Gos", "Gat", "Cavall", "Vaca", "Porc", "Ovella", "Cabra", "Gallina", "Gall", "Ànec", "Elefant", "Lleó", "Tigre", "Girafa", "Zebra", "Mico", "Os", "Llop", "Guineu", "Conill", "Ratolí", "Serp", "Cocodril", "Tortuga", "Rana", "Peix", "Tauró", "Dofí", "Balena", "Pingüí", "Àguila", "Mussol", "Lloro", "Abella", "Papallona", "Aranya"],
-            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
+            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
             "Transport": ["Cotxe", "Autobús", "Tren", "Metro", "Tramvia", "Bicicleta", "Moto", "Avió", "Helicòpter", "Vaixell", "Submarí", "Coet", "Tractor", "Camió", "Taxi", "Ambulància", "Grúa", "Caravana", "Veler", "Canoa"],
             "Llocs": ["Escola", "Universitat", "Hospital", "Església", "Museu", "Teatre", "Cine", "Biblioteca", "Restaurant", "Hotel", "Supermercat", "Mercat", "Parc", "Platja", "Muntanya", "Bosc", "Riu", "Llac", "Mar", "Illa", "Desert", "Castell", "Pont", "Aeroport", "Estació", "Gimnàs", "Piscina", "Estadi", "Banc", "Oficina", "Selva"],
             "Espai i Clima": ["Sol", "Lluna", "Estrella", "Planeta", "Terra", "Mart", "Núvol", "Pluja", "Neu", "Vent", "Tempesta", "Llampec", "Arc de Sant Martí", "Foc", "Aigua", "Aire", "Gel"],
@@ -144,12 +164,19 @@
             "Geometria": ["Cercle", "Quadrat", "Triangle", "Rectangle", "Cub", "Esfera", "Cilindre", "Piràmide", "Rombe", "Oval"],
             "Construccions": ["Gratacels", "Cabana", "Far", "Monestir", "Molí", "Granja", "Garatge", "Hangar", "Búnquer", "Fàbrica"],
             "Materials": ["Fusta", "Metall", "Vidre", "Plàstic", "Paper", "Cartró", "Pedra", "Or", "Plata", "Coure"],
-            "Bany": ["Sabó", "Tovallola", "Raspall", "Esponja", "Xampú", "Pinta", "Dutxa", "Banyera", "Secador", "Vàter"]
+            "Bany": ["Sabó", "Tovallola", "Raspall", "Esponja", "Xampú", "Pinta", "Dutxa", "Banyera", "Secador", "Vàter"],
+            "Pel·lícules": ["Toy Story", "Jurassic Park", "Titanic", "Star Wars", "El Rei Lleó", "Matrix", "Harry Potter", "Gladiator", "Shrek", "Avatar"],
+            "Sèries": ["Friends", "Game of Thrones", "Stranger Things", "The Simpsons", "Breaking Bad", "Lost", "La Casa de Papel", "Narcos", "Chernobyl", "Merlí"],
+            "Personatges de ficció": ["Batman", "Spider-Man", "Sherlock Holmes", "Mickey Mouse", "Super Mario", "Darth Vader", "Elsa", "James Bond", "Pikachu", "Lara Croft"],
+            "Personatges històrics": ["Leonardo da Vinci", "Cleopatra", "Albert Einstein", "Cristòfor Colom", "Marie Curie", "Napoleó", "Mozart", "Nelson Mandela", "Joana d'Arc", "Galileu"],
+            "Contes populars": ["La Caputxeta Vermella", "El Gat amb Botes", "La Ventafocs", "Pinotxo", "Els Tres Porquets", "Blancaneu", "Polzet", "L'Aneguet Lleig", "La Rateta que escombrava l'escaleta", "Sant Jordi i el Drac"],
+            "Marques": ["Apple", "Nike", "Coca-Cola", "Google", "Disney", "Mercedes", "Amazon", "Lego", "McDonald's", "Zara"],
+            "Llocs turístics": ["Torre Eiffel", "Sagrada Família", "Muralla Xinesa", "Colosseu de Roma", "Estàtua de la Llibertat", "Machu Picchu", "Taj Mahal", "Piràmides de Gizeh", "Petra", "Alhambra"]
         };
 
-        // Còpia de treball per poder eliminar paraules a mesura que surten
+        const baseUrl = "https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/";
+        
         let workingCategories = JSON.parse(JSON.stringify(wordCategories));
-        // Llista de claus de categories que encara no s'han fet servir en el cicle actual
         let unusedCategoryKeys = [];
 
         let gameConfig = {
@@ -162,6 +189,7 @@
             currentPlayer: 0,
             roles: [],
             secretWord: "",
+            currentCategory: "",
             actualImpostors: 0
         };
 
@@ -182,44 +210,32 @@
             }
         }
 
-        /**
-         * Lògica per obtenir una paraula secreta:
-         * 1. No repeteix categoria fins que s'han usat totes les que tenen paraules.
-         * 2. No repeteix paraula individual fins que s'esgoten totes les del diccionari.
-         */
         function getSecretWord() {
-            // Identificar quines categories tenen paraules disponibles
             let categoriesWithWords = Object.keys(workingCategories).filter(cat => workingCategories[cat].length > 0);
             
-            // Si no queden paraules en absolut, reiniciem tot el diccionari
             if (categoriesWithWords.length === 0) {
                 workingCategories = JSON.parse(JSON.stringify(wordCategories));
                 categoriesWithWords = Object.keys(workingCategories);
                 unusedCategoryKeys = [];
             }
 
-            // Filtrar les claus del cicle actual per assegurar que només triem categories que encara tenen paraules
             let validUnusedKeys = unusedCategoryKeys.filter(cat => workingCategories[cat].length > 0);
 
-            // Si hem completat un cicle (o n'estem començant un de nou), reiniciem el cicle de categories
             if (validUnusedKeys.length === 0) {
                 unusedCategoryKeys = [...categoriesWithWords];
                 validUnusedKeys = [...unusedCategoryKeys];
             }
 
-            // Triar una categoria aleatòria de les que toquen en aquest cicle
             const catIndex = Math.floor(Math.random() * validUnusedKeys.length);
             const chosenCategory = validUnusedKeys[catIndex];
+            
+            gameData.currentCategory = chosenCategory;
 
-            // Triar una paraula aleatòria d'aquesta categoria
             const wordsList = workingCategories[chosenCategory];
             const wordIndex = Math.floor(Math.random() * wordsList.length);
             const chosenWord = wordsList[wordIndex];
 
-            // Eliminar la paraula de la llista de treball (no repetir paraula)
             wordsList.splice(wordIndex, 1);
-            
-            // Eliminar la categoria del cicle actual (no repetir categoria fins acabar el cicle)
             unusedCategoryKeys = unusedCategoryKeys.filter(k => k !== chosenCategory);
 
             return chosenWord;
@@ -270,14 +286,19 @@
             document.getElementById('reveal-screen').classList.remove('hidden');
 
             if (role === "IMPOSTOR") {
+                const impostorImg = Math.random() > 0.5 ? "impostor.png" : "impostora.png";
                 display.innerHTML = `
+                    <img src="${baseUrl}${impostorImg}" class="w-48 h-auto mb-6 role-img" alt="Impostor">
                     <h3 class="text-slate-500 font-bold uppercase text-xs tracking-widest mb-2">Atenció:</h3>
-                    <h1 class="text-5xl font-black text-white mb-4 uppercase tracking-tighter italic">ETS L'IMPOSTOR</h1>
+                    <h1 class="text-5xl font-black text-white mb-4 uppercase tracking-tighter italic impostor-title-text">ETS L'IMPOSTOR</h1>
                 `;
             } else {
+                const civilImg = Math.random() > 0.5 ? "civil1.png" : "civil2.png";
                 display.innerHTML = `
+                    <img src="${baseUrl}${civilImg}" class="w-48 h-auto mb-6 role-img" alt="Civil">
                     <h3 class="text-slate-500 font-bold uppercase text-xs tracking-widest mb-2">La paraula secreta és:</h3>
-                    <h1 class="text-6xl font-black text-white mb-4 uppercase tracking-tight">${role}</h1>
+                    <h1 class="text-6xl font-black text-white mb-4 uppercase tracking-tight leading-tight">${role}</h1>
+                    <h3 class="text-slate-500 font-bold uppercase text-xs tracking-widest mt-2 tracking-[0.1em]">Categoria: ${gameData.currentCategory}</h3>
                 `;
             }
         }
