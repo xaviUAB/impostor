@@ -10,7 +10,7 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #020617; /* Blau molt fosc gairebé negre */
+            background-color: #020617;
             color: #f8fafc;
             touch-action: manipulation;
             user-select: none;
@@ -38,13 +38,13 @@
             background: #1e293b;
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.1s ease;
-            width: 3rem; /* 48px */
-            height: 3rem; /* 48px */
+            width: 3rem;
+            height: 3rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 0.75rem; /* rounded-xl */
-            font-size: 1.25rem; /* text-xl */
+            border-radius: 0.75rem;
+            font-size: 1.25rem;
             font-weight: 300;
         }
 
@@ -62,7 +62,6 @@
             max-height: 180px;
         }
 
-        /* Animació de pols per al botó de transició */
         @keyframes soft-pulse {
             0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1); }
             70% { box-shadow: 0 0 0 30px rgba(255, 255, 255, 0); }
@@ -77,11 +76,11 @@
 <body class="min-h-screen flex items-start justify-center overflow-hidden bg-slate-950">
 
     <!-- PANTALLA DE CONFIGURACIÓ -->
-    <div id="setup-screen" class="flex flex-col items-center justify-start h-screen w-full pt-6 pb-32 px-8 max-w-md mx-auto space-y-6">
+    <div id="setup-screen" class="flex flex-col items-center justify-start h-screen w-full pt-6 pb-36 px-8 max-w-md mx-auto space-y-6">
         
         <!-- Part Superior: Marca i Inici -->
         <div class="w-full flex flex-col items-center space-y-5">
-            <div class="relative min-h-[200px] flex items-center justify-center">
+            <div id="logo-container" class="relative min-h-[200px] flex items-center justify-center w-full">
                 <!-- Imatge d'animació principal -->
                 <img id="main-logo" 
                      src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp" 
@@ -100,9 +99,8 @@
             </button>
         </div>
 
-        <!-- Part Central-Inferior: Controls de joc compactats -->
+        <!-- Part Central: Controls de joc -->
         <div class="w-full space-y-5">
-            <!-- Selector Jugadors -->
             <div class="space-y-2">
                 <label class="block text-center text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Número de jugadors</label>
                 <div class="flex items-center justify-between glass-panel rounded-2xl p-1.5">
@@ -112,7 +110,6 @@
                 </div>
             </div>
 
-            <!-- Selector Impostors -->
             <div class="space-y-2">
                 <label class="block text-center text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Número d'impostors</label>
                 <div class="flex items-center justify-between glass-panel rounded-2xl p-1.5">
@@ -121,9 +118,8 @@
                     <button onclick="adjustValue('total-impostors', 1)" class="control-btn">+</button>
                 </div>
                 
-                <!-- Toggle Mode Aleatori -->
-                <div class="flex items-center justify-center pt-1">
-                    <label class="flex items-center cursor-pointer p-2">
+                <div class="flex items-center justify-center pt-2">
+                    <label class="flex items-center cursor-pointer p-3">
                         <div class="relative">
                             <input type="checkbox" id="random-mode" class="sr-only peer">
                             <div class="w-10 h-5 bg-slate-800 rounded-full peer peer-checked:bg-red-500/80 transition-all duration-300"></div>
@@ -136,7 +132,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE TRANSICIÓ (PASSAR MÒBIL) -->
+    <!-- PANTALLA DE TRANSICIÓ -->
     <div id="transition-screen" class="hidden full-screen-btn bg-slate-950 pb-32">
         <div class="text-center p-8 w-full h-full flex flex-col justify-start items-center pt-12 space-y-10">
             <div>
@@ -155,7 +151,7 @@
     <!-- PANTALLA DE REVELACIÓ -->
     <div id="reveal-screen" class="hidden flex flex-col items-center justify-start h-screen w-full pt-12 pb-32 px-8 text-center bg-slate-950 space-y-8">
         <div id="role-display" class="w-full flex flex-col items-center">
-            <!-- Contingut dinàmic -->
+            <!-- Dinàmic -->
         </div>
 
         <button onclick="nextTurn()" class="w-full max-w-xs py-5 glass-panel rounded-2xl font-bold text-base uppercase tracking-widest text-slate-400 active:bg-slate-800 transition-colors">
@@ -164,7 +160,7 @@
     </div>
 
     <!-- PANTALLA FINAL -->
-    <div id="end-screen" class="hidden flex flex-col items-center justify-start h-screen w-full pt-12 pb-32 px-8 text-center bg-slate-950 space-y-8 max-w-md mx-auto">
+    <div id="end-screen" class="hidden flex flex-col items-center justify-start h-screen w-full pt-12 pb-36 px-8 text-center bg-slate-950 space-y-8 max-w-md mx-auto">
         <div class="space-y-2">
             <h2 class="text-3xl font-black text-emerald-500 uppercase italic tracking-tight">ROLS ASSIGNATS</h2>
             <p class="text-slate-500 text-xs">Tots els jugadors coneixen la seva identitat.</p>
@@ -175,8 +171,6 @@
             <div id="game-summary" class="text-xl font-bold text-slate-200 mb-1"></div>
             <div id="game-mode-info" class="text-[9px] text-slate-500 italic"></div>
         </div>
-        
-        <p class="text-slate-400 text-xs italic">Comenceu el debat!</p>
         
         <button onclick="resetGame()" class="w-full py-5 bg-slate-800 rounded-2xl font-bold uppercase tracking-widest text-slate-300 active:bg-slate-700 transition-colors mt-auto">
             Nova Partida
@@ -189,7 +183,7 @@
             "Llar": ["Cadira", "Taula", "Sofà", "Llit", "Armari", "Mirall", "Llampa", "Catifa", "Cortina", "Rellotge", "Nevera", "Forn", "Microones", "Rentadora", "Rentaplats", "Televisor", "Ordinador", "Telèfon", "Ràdio", "Clau", "Martell", "Tornavís", "Alicates", "Escala", "Recollidor", "Escombra", "Pala", "Ventilador", "Paraigua", "Maleta"],
             "Roba": ["Samarreta", "Pantalons", "Jaqueta", "Abric", "Faldilla", "Vestit", "Jersei", "Mitjons", "Sabates", "Botes", "Sandàlies", "Gorra", "Barret", "Bufanda", "Guants", "Cinturó", "Corbata", "Pijama", "Barnús", "Roba interior", "Ulleres", "Rellotge de polsera", "Bossa", "Motxilla", "Moneder", "Collaret", "Anell", "Arracades", "Polsera"],
             "Animals": ["Gos", "Gat", "Cavall", "Vaca", "Porc", "Ovella", "Cabra", "Gallina", "Gall", "Ànec", "Elefant", "Lleó", "Tigre", "Girafa", "Zebra", "Mico", "Os", "Llop", "Guineu", "Conill", "Ratolí", "Serp", "Cocodril", "Tortuga", "Rana", "Peix", "Tauró", "Dofí", "Balena", "Pingüí", "Àguila", "Mussol", "Lloro", "Abella", "Papallona", "Aranya"],
-            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
+            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
             "Transport": ["Cotxe", "Autobús", "Tren", "Metro", "Tramvia", "Bicicleta", "Moto", "Avió", "Helicòpter", "Vaixell", "Submarí", "Coet", "Tractor", "Camió", "Taxi", "Ambulància", "Grúa", "Caravana", "Veler", "Canoa"],
             "Llocs": ["Escola", "Universitat", "Hospital", "Església", "Museu", "Teatre", "Cine", "Biblioteca", "Restaurant", "Hotel", "Supermercat", "Mercat", "Parc", "Platja", "Muntanya", "Bosc", "Riu", "Llac", "Mar", "Illa", "Desert", "Castell", "Pont", "Aeroport", "Estació", "Gimnàs", "Piscina", "Estadi", "Banc", "Oficina", "Selva"],
             "Espai i Clima": ["Sol", "Lluna", "Estrella", "Planeta", "Terra", "Mart", "Núvol", "Pluja", "Neu", "Vent", "Tempesta", "Llampec", "Arc de Sant Martí", "Foc", "Aigua", "Aire", "Gel"],
@@ -235,7 +229,6 @@
             if (id === 'total-players') {
                 gameConfig.players = Math.max(3, Math.min(20, gameConfig.players + delta));
                 document.getElementById('display-total-players').innerText = gameConfig.players;
-                
                 const maxImpostors = Math.max(1, gameConfig.players - 2);
                 if (gameConfig.impostors > maxImpostors) {
                     gameConfig.impostors = maxImpostors;
@@ -250,49 +243,37 @@
 
         function getSecretWord() {
             let categoriesWithWords = Object.keys(workingCategories).filter(cat => workingCategories[cat].length > 0);
-            
             if (categoriesWithWords.length === 0) {
                 workingCategories = JSON.parse(JSON.stringify(wordCategories));
                 categoriesWithWords = Object.keys(workingCategories);
                 unusedCategoryKeys = [];
             }
-
             let validUnusedKeys = unusedCategoryKeys.filter(cat => workingCategories[cat].length > 0);
-
             if (validUnusedKeys.length === 0) {
                 unusedCategoryKeys = [...categoriesWithWords];
                 validUnusedKeys = [...unusedCategoryKeys];
             }
-
             const catIndex = Math.floor(Math.random() * validUnusedKeys.length);
             const chosenCategory = validUnusedKeys[catIndex];
-            
             gameData.currentCategory = chosenCategory;
-
             const wordsList = workingCategories[chosenCategory];
             const wordIndex = Math.floor(Math.random() * wordsList.length);
             const chosenWord = wordsList[wordIndex];
-
             wordsList.splice(wordIndex, 1);
             unusedCategoryKeys = unusedCategoryKeys.filter(k => k !== chosenCategory);
-
             return chosenWord;
         }
 
         function startGame() {
             gameConfig.isRandom = document.getElementById('random-mode').checked;
-            
             if (gameConfig.isRandom) {
                 gameData.actualImpostors = Math.floor(Math.random() * gameConfig.impostors) + 1;
             } else {
                 gameData.actualImpostors = gameConfig.impostors;
             }
-
             gameData.secretWord = getSecretWord();
             gameData.currentPlayer = 0;
-            
             gameData.roles = new Array(gameConfig.players).fill(gameData.secretWord);
-            
             let assignedImpostors = 0;
             while (assignedImpostors < gameData.actualImpostors) {
                 let randomIndex = Math.floor(Math.random() * gameConfig.players);
@@ -301,9 +282,7 @@
                     assignedImpostors++;
                 }
             }
-
             document.getElementById('setup-screen').classList.add('hidden');
-            document.getElementById('setup-screen').classList.remove('flex');
             showTransition();
         }
 
@@ -321,11 +300,9 @@
         function revealRole() {
             const role = gameData.roles[gameData.currentPlayer];
             const display = document.getElementById('role-display');
-            
             document.getElementById('transition-screen').classList.add('hidden');
             document.getElementById('reveal-screen').classList.remove('hidden');
             document.getElementById('reveal-screen').classList.add('flex');
-
             if (role === "IMPOSTOR") {
                 const impostorImg = Math.random() > 0.5 ? "impostor.png" : "impostora.png";
                 display.innerHTML = `
@@ -361,7 +338,6 @@
             document.getElementById('transition-screen').classList.add('hidden');
             document.getElementById('end-screen').classList.remove('hidden');
             document.getElementById('end-screen').classList.add('flex');
-            
             if (gameConfig.isRandom) {
                 document.getElementById('game-summary').innerText = `${gameConfig.players} Jugadors`;
                 document.getElementById('game-mode-info').innerText = "Número d'impostors secret (Mode Aleatori)";
@@ -378,20 +354,35 @@
             document.getElementById('setup-screen').classList.remove('hidden');
             document.getElementById('setup-screen').classList.add('flex');
 
-            // --- CORRECCIÓ DE REINICI D'ANIMACIÓ ---
-            const logo = document.getElementById('main-logo');
-            const fallback = document.getElementById('fallback-title');
+            // --- REINICI ROBUST PER A iOS ---
+            const container = document.getElementById('logo-container');
             const cleanUrl = "https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp";
             
-            // Primer ocultem el fallback i preparem la imatge
-            fallback.classList.add('hidden');
-            logo.classList.remove('hidden');
+            // Eliminem l'element antic per netejar la memòria de Safari/iOS
+            const oldLogo = document.getElementById('main-logo');
+            if (oldLogo) oldLogo.remove();
             
-            // Forcem recàrrega de la imatge amb un timestamp per assegurar el reinici del WebP
-            logo.src = ""; // Netegem src per evitar l'error persistente
-            setTimeout(() => {
-                logo.src = cleanUrl + "?t=" + Date.now();
-            }, 10);
+            // Creem el nou element de zero
+            const newLogo = document.createElement('img');
+            newLogo.id = 'main-logo';
+            newLogo.className = 'w-full max-w-[200px] h-auto drop-shadow-2xl hidden'; // Amagat fins que carregui
+            newLogo.alt = 'IMPOSTOR';
+            
+            newLogo.onload = function() {
+                this.classList.remove('hidden');
+                document.getElementById('fallback-title').classList.add('hidden');
+            };
+            
+            newLogo.onerror = function() {
+                this.classList.add('hidden');
+                document.getElementById('fallback-title').classList.remove('hidden');
+            };
+            
+            // Afegim un paràmetre únic per forçar el reinici del frame 0 del WebP animat
+            newLogo.src = cleanUrl + "?t=" + Date.now();
+            
+            // L'afegim al contenidor abans del fallback
+            container.prepend(newLogo);
         }
     </script>
 </body>
