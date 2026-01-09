@@ -44,63 +44,61 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center overflow-hidden">
 
     <!-- Pantalla de Configuració -->
-    <div id="setup-screen" class="w-full max-w-md space-y-8 bg-slate-800 p-8 rounded-3xl shadow-2xl border border-slate-700">
-        <div class="text-center">
-            <!-- Imatge del títol -->
+    <div id="setup-screen" class="flex flex-col items-center justify-between h-screen w-full py-12 px-6 max-w-md mx-auto">
+        <div class="w-full flex justify-center pt-4">
+            <!-- Imatge del títol reduïda -->
             <img id="main-logo" 
                  src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/titol_impostor.png" 
                  alt="IMPOSTOR" 
-                 class="mx-auto w-full max-w-[280px] h-auto drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]"
+                 class="w-full max-w-[200px] h-auto drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]"
                  onload="this.classList.remove('hidden'); document.getElementById('fallback-title').classList.add('hidden');"
                  onerror="this.classList.add('hidden'); document.getElementById('fallback-title').classList.remove('hidden');">
             
             <!-- Fallback en cas que la imatge no carregui -->
-            <div id="fallback-title" class="py-4">
-                <h1 class="text-5xl font-black tracking-tighter italic text-red-600 uppercase impostor-title-text leading-none">IMPOSTOR</h1>
-                <div class="h-1 w-24 bg-red-600 mx-auto mt-2 rounded-full opacity-50"></div>
+            <div id="fallback-title" class="hidden py-4 text-center">
+                <h1 class="text-4xl font-black tracking-tighter italic text-red-600 uppercase impostor-title-text leading-none">IMPOSTOR</h1>
+                <div class="h-1 w-16 bg-red-600 mx-auto mt-2 rounded-full opacity-50"></div>
             </div>
-            
-            <p class="text-slate-400 mt-4 text-sm font-medium uppercase tracking-widest">Configura la teva partida</p>
         </div>
 
-        <div class="space-y-8">
+        <!-- Controls alineats a la part inferior -->
+        <div class="w-full space-y-6">
             <!-- Control Jugadors -->
             <div>
-                <label class="block text-center text-xs font-bold mb-4 text-slate-500 uppercase tracking-widest">Número de jugadors</label>
-                <div class="flex items-center justify-between bg-slate-900 rounded-2xl p-2 border border-slate-700">
-                    <button onclick="adjustValue('total-players', -1)" class="w-16 h-16 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-3xl font-bold transition active:scale-90">-</button>
-                    <span id="display-total-players" class="text-4xl font-black w-20 text-center">4</span>
-                    <button onclick="adjustValue('total-players', 1)" class="w-16 h-16 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-3xl font-bold transition active:scale-90">+</button>
+                <label class="block text-center text-xs font-bold mb-3 text-slate-500 uppercase tracking-widest">Número de jugadors</label>
+                <div class="flex items-center justify-between bg-slate-900 rounded-2xl p-1.5 border border-slate-700">
+                    <button onclick="adjustValue('total-players', -1)" class="w-14 h-14 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-2xl font-bold transition active:scale-90">-</button>
+                    <span id="display-total-players" class="text-3xl font-black w-16 text-center">4</span>
+                    <button onclick="adjustValue('total-players', 1)" class="w-14 h-14 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-2xl font-bold transition active:scale-90">+</button>
                 </div>
             </div>
 
             <!-- Control Impostors -->
             <div>
-                <label class="block text-center text-xs font-bold mb-4 text-slate-500 uppercase tracking-widest">Número d'impostors (màx)</label>
-                <div class="flex items-center justify-between bg-slate-900 rounded-2xl p-2 border border-slate-700">
-                    <button onclick="adjustValue('total-impostors', -1)" class="w-16 h-16 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-3xl font-bold transition active:scale-90">-</button>
-                    <span id="display-total-impostors" class="text-4xl font-black w-20 text-center">1</span>
-                    <button onclick="adjustValue('total-impostors', 1)" class="w-16 h-16 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-3xl font-bold transition active:scale-90">+</button>
+                <label class="block text-center text-xs font-bold mb-3 text-slate-500 uppercase tracking-widest">Número d'impostors (màx)</label>
+                <div class="flex items-center justify-between bg-slate-900 rounded-2xl p-1.5 border border-slate-700">
+                    <button onclick="adjustValue('total-impostors', -1)" class="w-14 h-14 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-2xl font-bold transition active:scale-90">-</button>
+                    <span id="display-total-impostors" class="text-3xl font-black w-16 text-center">1</span>
+                    <button onclick="adjustValue('total-impostors', 1)" class="w-14 h-14 flex items-center justify-center bg-slate-700 hover:bg-slate-600 rounded-xl text-2xl font-bold transition active:scale-90">+</button>
                 </div>
                 
                 <!-- Toggle Aleatori -->
-                <div class="mt-6 flex items-center justify-center space-x-3">
+                <div class="mt-4 flex items-center justify-center space-x-3">
                     <label class="flex items-center cursor-pointer group">
                         <div class="relative">
                             <input type="checkbox" id="random-mode" class="sr-only peer">
-                            <div class="w-12 h-6 bg-slate-700 rounded-full peer peer-checked:bg-red-600 transition-colors"></div>
-                            <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-6 shadow-md"></div>
+                            <div class="w-10 h-5 bg-slate-700 rounded-full peer peer-checked:bg-red-600 transition-colors"></div>
+                            <div class="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-5 shadow-md"></div>
                         </div>
-                        <span class="ml-3 text-slate-300 font-bold group-hover:text-white transition-colors uppercase text-xs tracking-wider">Mode aleatori</span>
+                        <span class="ml-3 text-slate-400 font-bold group-hover:text-white transition-colors uppercase text-[10px] tracking-wider">Mode aleatori</span>
                     </label>
                 </div>
-                <p class="text-[10px] text-center text-slate-500 mt-3 italic px-4 leading-tight">Si s'activa, hi haurà entre 1 i el número indicat d'impostors. Els jugadors no sabran quants n'hi ha.</p>
             </div>
 
-            <button onclick="startGame()" class="w-full py-6 bg-red-600 hover:bg-red-500 rounded-2xl font-black text-2xl shadow-xl transition transform active:scale-95 uppercase tracking-tighter">
+            <button onclick="startGame()" class="w-full py-5 bg-red-600 hover:bg-red-500 rounded-2xl font-black text-xl shadow-xl transition transform active:scale-95 uppercase tracking-tighter">
                 REPARTIR ROLS
             </button>
         </div>
@@ -132,13 +130,15 @@
     </div>
 
     <!-- Pantalla Final -->
-    <div id="end-screen" class="hidden text-center space-y-8 bg-slate-800 p-8 rounded-3xl shadow-2xl border border-slate-700 w-full max-w-md">
-        <h2 class="text-3xl font-black text-green-500 uppercase italic">ROLS ASSIGNATS</h2>
-        <p class="text-slate-300">Tothom ja sap qui és. Comenceu la discussió!</p>
-        <div class="p-6 bg-slate-900 rounded-2xl border border-slate-700">
-            <p class="text-xs text-slate-500 uppercase font-black mb-2 tracking-widest">Resum de la partida</p>
-            <p id="game-summary" class="text-xl font-bold"></p>
-            <p id="game-mode-info" class="text-xs text-slate-500 mt-2"></p>
+    <div id="end-screen" class="hidden flex flex-col items-center justify-between h-screen w-full py-12 px-6 text-center max-w-md mx-auto">
+        <div class="flex-1 flex flex-col items-center justify-center space-y-8">
+            <h2 class="text-3xl font-black text-green-500 uppercase italic">ROLS ASSIGNATS</h2>
+            <p class="text-slate-300">Tothom ja sap qui és. Comenceu la discussió!</p>
+            <div class="p-6 bg-slate-900 rounded-2xl border border-slate-700 w-full">
+                <p class="text-xs text-slate-500 uppercase font-black mb-2 tracking-widest">Resum de la partida</p>
+                <p id="game-summary" class="text-xl font-bold"></p>
+                <p id="game-mode-info" class="text-xs text-slate-500 mt-2"></p>
+            </div>
         </div>
         <button onclick="resetGame()" class="w-full py-5 bg-slate-700 hover:bg-slate-600 rounded-2xl font-black transition uppercase">
             NOVA PARTIDA
@@ -265,6 +265,7 @@
             }
 
             document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.remove('flex');
             showTransition();
         }
 
@@ -312,6 +313,7 @@
             document.getElementById('reveal-screen').classList.add('hidden');
             document.getElementById('transition-screen').classList.add('hidden');
             document.getElementById('end-screen').classList.remove('hidden');
+            document.getElementById('end-screen').classList.add('flex');
             
             if (gameConfig.isRandom) {
                 document.getElementById('game-summary').innerText = `${gameConfig.players} Jugadors`;
@@ -325,7 +327,9 @@
 
         function resetGame() {
             document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('flex');
             document.getElementById('setup-screen').classList.remove('hidden');
+            document.getElementById('setup-screen').classList.add('flex');
         }
     </script>
 </body>
