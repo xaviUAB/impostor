@@ -38,6 +38,14 @@
             background: #1e293b;
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.1s ease;
+            width: 3rem; /* 48px */
+            height: 3rem; /* 48px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem; /* rounded-xl */
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 300;
         }
 
         .control-btn:active {
@@ -54,7 +62,6 @@
             max-height: 180px;
         }
 
-        /* Animació de pols per al botó de transició */
         @keyframes soft-pulse {
             0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1); }
             70% { box-shadow: 0 0 0 30px rgba(255, 255, 255, 0); }
@@ -75,7 +82,7 @@
         <div class="w-full flex flex-col items-center space-y-5">
             <div class="relative">
                 <img id="main-logo" 
-                     src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/titol_impostor.png" 
+                     src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp" 
                      alt="IMPOSTOR" 
                      class="w-full max-w-[160px] h-auto drop-shadow-2xl"
                      onload="this.classList.remove('hidden'); document.getElementById('fallback-title').classList.add('hidden');"
@@ -91,15 +98,15 @@
             </button>
         </div>
 
-        <!-- Part Central-Inferior: Controls de joc compactats -->
+        <!-- Part Central-Inferior: Controls de joc -->
         <div class="w-full space-y-5">
             <!-- Selector Jugadors -->
             <div class="space-y-2">
                 <label class="block text-center text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Número de jugadors</label>
                 <div class="flex items-center justify-between glass-panel rounded-2xl p-1.5">
-                    <button onclick="adjustValue('total-players', -1)" class="control-btn w-12 h-12 flex items-center justify-center rounded-xl text-xl font-light">-</button>
+                    <button onclick="adjustValue('total-players', -1)" class="control-btn">-</button>
                     <span id="display-total-players" class="text-2xl font-bold w-14 text-center text-slate-200">4</span>
-                    <button onclick="adjustValue('total-players', 1)" class="control-btn w-12 h-12 flex items-center justify-center rounded-xl text-xl font-light">+</button>
+                    <button onclick="adjustValue('total-players', 1)" class="control-btn">+</button>
                 </div>
             </div>
 
@@ -107,9 +114,9 @@
             <div class="space-y-2">
                 <label class="block text-center text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Número d'impostors</label>
                 <div class="flex items-center justify-between glass-panel rounded-2xl p-1.5">
-                    <button onclick="adjustValue('total-impostors', -1)" class="control-btn w-12 h-12 flex items-center justify-center rounded-xl text-xl font-light">-</button>
+                    <button onclick="adjustValue('total-impostors', -1)" class="control-btn">-</button>
                     <span id="display-total-impostors" class="text-2xl font-bold w-14 text-center text-slate-200">1</span>
-                    <button onclick="adjustValue('total-impostors', 1)" class="control-btn w-12 h-12 flex items-center justify-center rounded-xl text-xl font-light">+</button>
+                    <button onclick="adjustValue('total-impostors', 1)" class="control-btn">+</button>
                 </div>
                 
                 <!-- Toggle Mode Aleatori -->
@@ -127,8 +134,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE TRANSICIÓ (PASSAR MÒBIL) -->
-    <!-- Ajustada a items-start i justify-start -->
+    <!-- PANTALLA DE TRANSICIÓ -->
     <div id="transition-screen" class="hidden full-screen-btn bg-slate-950 pb-32">
         <div class="text-center p-8 w-full h-full flex flex-col justify-start items-center pt-12 space-y-10">
             <div>
@@ -145,10 +151,9 @@
     </div>
 
     <!-- PANTALLA DE REVELACIÓ -->
-    <!-- Ajustada a justify-start -->
     <div id="reveal-screen" class="hidden flex flex-col items-center justify-start h-screen w-full pt-12 pb-32 px-8 text-center bg-slate-950 space-y-8">
         <div id="role-display" class="w-full flex flex-col items-center">
-            <!-- Contingut generat per JS -->
+            <!-- Contingut dinàmic -->
         </div>
 
         <button onclick="nextTurn()" class="w-full max-w-xs py-5 glass-panel rounded-2xl font-bold text-base uppercase tracking-widest text-slate-400 active:bg-slate-800 transition-colors">
@@ -305,6 +310,7 @@
                 document.getElementById('player-turn-text').innerText = `Jugador ${gameData.currentPlayer + 1}`;
                 document.getElementById('transition-screen').classList.remove('hidden');
                 document.getElementById('reveal-screen').classList.add('hidden');
+                document.getElementById('reveal-screen').classList.remove('flex');
             } else {
                 showEndScreen();
             }
@@ -369,6 +375,11 @@
             document.getElementById('end-screen').classList.remove('flex');
             document.getElementById('setup-screen').classList.remove('hidden');
             document.getElementById('setup-screen').classList.add('flex');
+
+            // Reiniciar l'animació forçant la càrrega de la imatge amb un timestamp
+            const logo = document.getElementById('main-logo');
+            const cleanUrl = "https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp";
+            logo.src = cleanUrl + "?t=" + new Date().getTime();
         }
     </script>
 </body>
