@@ -62,6 +62,16 @@
             max-height: 180px;
         }
 
+        /* Transició per al fos encadenat */
+        .fade-layer {
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+        }
+
         /* Animació de pols per al botó de transició */
         @keyframes soft-pulse {
             0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1); }
@@ -81,15 +91,22 @@
         
         <!-- Part Superior: Marca i Inici -->
         <div class="w-full flex flex-col items-center space-y-5">
-            <div id="logo-container" class="relative min-h-[200px] flex items-center justify-center w-full">
-                <!-- Imatge d'animació principal -->
-                <img id="main-logo" 
-                     src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp" 
+            <!-- Contenidor del logo amb dues capes per al cross-fade -->
+            <div id="logo-container" class="relative min-h-[200px] flex items-center justify-center w-full overflow-hidden">
+                
+                <!-- Capa Estàtica -->
+                <img id="logo-static" 
+                     src="https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/titol_impostor.png" 
                      alt="IMPOSTOR" 
-                     class="w-full max-w-[200px] h-auto drop-shadow-2xl"
+                     class="fade-layer opacity-100 w-full max-w-[200px] h-auto drop-shadow-2xl z-10"
                      onerror="this.style.display='none'; document.getElementById('fallback-title').classList.remove('hidden');">
                 
-                <div id="fallback-title" class="hidden text-center">
+                <!-- Capa Animada (es crea/carrega dinàmicament per reiniciar el frame 0) -->
+                <img id="logo-anim" 
+                     class="fade-layer opacity-0 w-full max-w-[200px] h-auto drop-shadow-2xl z-20"
+                     alt="IMPOSTOR ANIMACIÓ">
+
+                <div id="fallback-title" class="hidden text-center z-30">
                     <h1 class="text-3xl font-black tracking-tighter italic text-red-500 uppercase impostor-glow">IMPOSTOR</h1>
                 </div>
             </div>
@@ -118,7 +135,7 @@
                     <button onclick="adjustValue('total-impostors', 1)" class="control-btn">+</button>
                 </div>
                 
-                <div class="flex items-center justify-center pt-2">
+                <div class="flex items-center justify-center pt-1">
                     <label class="flex items-center cursor-pointer p-3">
                         <div class="relative">
                             <input type="checkbox" id="random-mode" class="sr-only peer">
@@ -172,6 +189,8 @@
             <div id="game-mode-info" class="text-[9px] text-slate-500 italic"></div>
         </div>
         
+        <p class="text-slate-400 text-xs italic">Comenceu el debat!</p>
+        
         <button onclick="resetGame()" class="w-full py-5 bg-slate-800 rounded-2xl font-bold uppercase tracking-widest text-slate-300 active:bg-slate-700 transition-colors mt-auto">
             Nova Partida
         </button>
@@ -183,7 +202,7 @@
             "Llar": ["Cadira", "Taula", "Sofà", "Llit", "Armari", "Mirall", "Llampa", "Catifa", "Cortina", "Rellotge", "Nevera", "Forn", "Microones", "Rentadora", "Rentaplats", "Televisor", "Ordinador", "Telèfon", "Ràdio", "Clau", "Martell", "Tornavís", "Alicates", "Escala", "Recollidor", "Escombra", "Pala", "Ventilador", "Paraigua", "Maleta"],
             "Roba": ["Samarreta", "Pantalons", "Jaqueta", "Abric", "Faldilla", "Vestit", "Jersei", "Mitjons", "Sabates", "Botes", "Sandàlies", "Gorra", "Barret", "Bufanda", "Guants", "Cinturó", "Corbata", "Pijama", "Barnús", "Roba interior", "Ulleres", "Rellotge de polsera", "Bossa", "Motxilla", "Moneder", "Collaret", "Anell", "Arracades", "Polsera"],
             "Animals": ["Gos", "Gat", "Cavall", "Vaca", "Porc", "Ovella", "Cabra", "Gallina", "Gall", "Ànec", "Elefant", "Lleó", "Tigre", "Girafa", "Zebra", "Mico", "Os", "Llop", "Guineu", "Conill", "Ratolí", "Serp", "Cocodril", "Tortuga", "Rana", "Peix", "Tauró", "Dofí", "Balena", "Pingüí", "Àguila", "Mussol", "Lloro", "Abella", "Papallona", "Aranya"],
-            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
+            "Menjar": ["Poma", "Plàtan", "Taronja", "Maduixa", "Raïm", "Pera", "Llimona", "Síndria", "Meló", "Pinya", "Kiwi", "Cirera", "Préssec", "Enciam", "Tomàquet", "Pastanaga", "Patata", "Ceba", "All", "Pebrot", "Bròquil", "Pa", "Arròs", "Pasta", "Pizza", "Hamburguesa", "Formatge", "Ou", "Llet", "Iogurt", "Xocolata", "Gelat", "Cafè", "Té", "Vi", "Cervesa"],
             "Transport": ["Cotxe", "Autobús", "Tren", "Metro", "Tramvia", "Bicicleta", "Moto", "Avió", "Helicòpter", "Vaixell", "Submarí", "Coet", "Tractor", "Camió", "Taxi", "Ambulància", "Grúa", "Caravana", "Veler", "Canoa"],
             "Llocs": ["Escola", "Universitat", "Hospital", "Església", "Museu", "Teatre", "Cine", "Biblioteca", "Restaurant", "Hotel", "Supermercat", "Mercat", "Parc", "Platja", "Muntanya", "Bosc", "Riu", "Llac", "Mar", "Illa", "Desert", "Castell", "Pont", "Aeroport", "Estació", "Gimnàs", "Piscina", "Estadi", "Banc", "Oficina", "Selva"],
             "Espai i Clima": ["Sol", "Lluna", "Estrella", "Planeta", "Terra", "Mart", "Núvol", "Pluja", "Neu", "Vent", "Tempesta", "Llampec", "Arc de Sant Martí", "Foc", "Aigua", "Aire", "Gel"],
@@ -207,6 +226,7 @@
         };
 
         const baseUrl = "https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/";
+        const animatedLogoUrl = baseUrl + "impostor.webp";
         
         let workingCategories = JSON.parse(JSON.stringify(wordCategories));
         let unusedCategoryKeys = [];
@@ -224,6 +244,38 @@
             currentCategory: "",
             actualImpostors: 0
         };
+
+        // Gestió de l'animació amb transició de fos encadenat
+        function triggerIntroAnimation() {
+            const staticImg = document.getElementById('logo-static');
+            const animImg = document.getElementById('logo-anim');
+            
+            // Assegurem l'estat inicial
+            staticImg.style.opacity = "1";
+            animImg.style.opacity = "0";
+            
+            // Carreguem l'animació en un element temporal per forçar reinici
+            const nextAnim = new Image();
+            nextAnim.src = animatedLogoUrl + "?t=" + Date.now();
+            
+            nextAnim.onload = () => {
+                // Posem el nou src i fem el fos encadenat cap a l'animació
+                animImg.src = nextAnim.src;
+                
+                setTimeout(() => {
+                    staticImg.style.opacity = "0";
+                    animImg.style.opacity = "1";
+                    
+                    // Al cap de 20 segons, fem el fos encadenat de tornada a l'estàtica
+                    setTimeout(() => {
+                        staticImg.style.opacity = "1";
+                        animImg.style.opacity = "0";
+                    }, 20000);
+                }, 50); // Petit retard per assegurar el renderitzat
+            };
+        }
+
+        window.onload = triggerIntroAnimation;
 
         function adjustValue(id, delta) {
             if (id === 'total-players') {
@@ -355,29 +407,7 @@
             document.getElementById('setup-screen').classList.remove('hidden');
             document.getElementById('setup-screen').classList.add('flex');
 
-            const container = document.getElementById('logo-container');
-            const oldLogo = document.getElementById('main-logo');
-            const fallback = document.getElementById('fallback-title');
-            const cleanUrl = "https://raw.githubusercontent.com/xaviUAB/impostor/main/imatges/impostor.webp";
-            
-            // --- CÀRREGA EN SEGON PLA PER EVITAR EL QUADRE NEGRE ---
-            const nextLogo = new Image();
-            // Li passem un timestamp per forçar el reinici del frame 0 a iOS/Android
-            nextLogo.src = cleanUrl + "?t=" + Date.now();
-            
-            // Mentrestant l'antic segueix visible. Quan el nou estigui a la memòria, fem el canvi.
-            nextLogo.onload = function() {
-                if (oldLogo) {
-                    oldLogo.src = nextLogo.src;
-                    oldLogo.style.display = 'block';
-                    fallback.classList.add('hidden');
-                }
-            };
-            
-            nextLogo.onerror = function() {
-                if (oldLogo) oldLogo.style.display = 'none';
-                fallback.classList.remove('hidden');
-            };
+            triggerIntroAnimation();
         }
     </script>
 </body>
